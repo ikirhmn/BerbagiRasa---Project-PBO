@@ -106,6 +106,20 @@ public class Login extends JFrame {
         // Tambahkan panel kiri dan kanan ke JFrame
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
+
+        loginButton.addActionListener(e -> {
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            
+            LoginConnection loginService = new LoginConnection();
+            if (loginService.validateLogin(username, password)) {
+                JOptionPane.showMessageDialog(this, "Login berhasil!", "Success", JOptionPane.INFORMATION_MESSAGE);
+
+                //code pindah halamannya ditulis disini
+            } else {
+                JOptionPane.showMessageDialog(this, "Username atau password salah.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
     }
 
     public static void main(String[] args) {
