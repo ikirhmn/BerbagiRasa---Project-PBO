@@ -110,16 +110,19 @@ public class Login extends JFrame {
         loginButton.addActionListener(e -> {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
-            
+        
             LoginConnection loginService = new LoginConnection();
-            if (loginService.validateLogin(username, password)) {
-                JOptionPane.showMessageDialog(this, "Login berhasil!", "Success", JOptionPane.INFORMATION_MESSAGE);
-
-                //code pindah halamannya ditulis disini
+            int userId = loginService.validateUser(username, password);
+        
+            if (userId != -1) {
+                JOptionPane.showMessageDialog(this, "Login berhasil!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                dispose(); // Tutup frame Login
+                SwingUtilities.invokeLater(() -> new Beranda(userId).setVisible(true));
             } else {
-                JOptionPane.showMessageDialog(this, "Username atau password salah.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Username atau password salah!", "Gagal", JOptionPane.ERROR_MESSAGE);
             }
         });
+        
     }
 
     public static void main(String[] args) {
@@ -128,4 +131,5 @@ public class Login extends JFrame {
             loginFrame.setVisible(true);
         });
     }
+    
 }
