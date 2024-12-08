@@ -3,13 +3,13 @@ package src;
 import javax.swing.*;
 import java.awt.*;
 
-public class Login extends JFrame {
+public class LoginDonatur extends JFrame {
 
-    public Login() {
+    public LoginDonatur() {
         // Set title dan ukuran awal jendela
         setTitle("Login - BerbagiRasa");
         setSize(900, 600); // Ubah ukuran agar lebih proporsional
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null); // Posisi di tengah layar
         setResizable(false);
 
@@ -53,7 +53,7 @@ public class Login extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10); // Margin antar komponen
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel loginTitle = new JLabel("Login");
+        JLabel loginTitle = new JLabel("Login sebagai Donatur");
         loginTitle.setFont(new Font("Poppins", Font.BOLD, 36));
         loginTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
@@ -115,11 +115,12 @@ public class Login extends JFrame {
             int userId = loginService.validateUser(username, password);
         
             if (userId != -1) {
-                JOptionPane.showMessageDialog(this, "Login berhasil!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                dispose(); // Tutup frame Login
-                SwingUtilities.invokeLater(() -> new Beranda(userId).setVisible(true));
+                // Login berhasil, buka BerandaDonatur dengan userId
+                new BerandaDonatur(userId);
+                this.dispose(); // Menutup jendela login
             } else {
-                JOptionPane.showMessageDialog(this, "Username atau password salah!", "Gagal", JOptionPane.ERROR_MESSAGE);
+                // Login gagal, tampilkan pesan kesalahan
+                JOptionPane.showMessageDialog(this, "Username atau Password salah!");
             }
         });
         
@@ -127,7 +128,7 @@ public class Login extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            Login loginFrame = new Login();
+            LoginDonatur loginFrame = new LoginDonatur();
             loginFrame.setVisible(true);
         });
     }

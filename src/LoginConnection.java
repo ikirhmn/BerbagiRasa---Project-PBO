@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class LoginConnection {
-
     public int validateUser(String username, String password) {
         String query = "SELECT id FROM users WHERE username = ? AND password = ?";
         try (Connection conn = DatabaseConnection.getConnection();
