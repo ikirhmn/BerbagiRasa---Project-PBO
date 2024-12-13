@@ -1,14 +1,22 @@
 package Donatur;
-import javax.swing.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import src.DatabaseConnection;
 
 public class ProfileDonatur {
     private int userId;
+
     public ProfileDonatur(int userId) {
         this.userId = userId;
+
         // Membuat JFrame untuk ProfileDonatur
         JFrame frame = new JFrame("Profile Donatur");
         frame.setSize(1440, 900);
@@ -56,9 +64,8 @@ public class ProfileDonatur {
         riwayatButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Membuka Frame Riwayat
                 new RiwayatDonatur(userId);
-                frame.dispose(); // Menutup JFrame ProfileDonatur
+                frame.dispose();
             }
         });
 
@@ -66,17 +73,15 @@ public class ProfileDonatur {
         donasiButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Membuka Frame Donasi
                 new Donasi(userId);
-                frame.dispose(); // Menutup JFrame ProfileDonatur
+                frame.dispose();
             }
         });
 
         berandaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Membuka Frame Riwayat
-                new BerandaDonatur(userId);// Menutup JFrame utama jika diperlukan
+                new BerandaDonatur(userId);
                 frame.dispose();
             }
         });
@@ -88,22 +93,46 @@ public class ProfileDonatur {
         profilePanel.setBounds(0, 80, 1440, 800);
         profilePanel.setLayout(null);
 
-        // Contoh Konten Profile
         JLabel profileLabel = new JLabel("<html><b>Profile Donatur</b></html>");
         profileLabel.setBounds(20, 20, 400, 40);
         profileLabel.setFont(new Font("Arial", Font.BOLD, 24));
         profilePanel.add(profileLabel);
 
-        // Menampilkan informasi profil donatur (contoh)
-        JLabel nameLabel = new JLabel("Nama: John Doe");
-        nameLabel.setBounds(20, 80, 400, 40);
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        profilePanel.add(nameLabel);
+        // Mengambil data dari database dan menampilkan informasi profil donatur
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT nama, alamat FROM Donatur WHERE id_donatur = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, userId);
 
-        JLabel emailLabel = new JLabel("Email: johndoe@example.com");
-        emailLabel.setBounds(20, 120, 400, 40);
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        profilePanel.add(emailLabel);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        String nama = rs.getString("nama");
+                        String alamat = rs.getString("alamat");
+
+                        JLabel nameLabel = new JLabel("Nama: " + nama);
+                        nameLabel.setBounds(20, 80, 400, 40);
+                        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        profilePanel.add(nameLabel);
+
+                        JLabel addressLabel = new JLabel("Alamat: " + alamat);
+                        addressLabel.setBounds(20, 120, 400, 40);
+                        addressLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        profilePanel.add(addressLabel);
+                    } else {
+                        JLabel errorLabel = new JLabel("Data tidak ditemukan.");
+                        errorLabel.setBounds(20, 80, 400, 40);
+                        errorLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        profilePanel.add(errorLabel);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JLabel errorLabel = new JLabel("Terjadi kesalahan saat mengambil data.");
+            errorLabel.setBounds(20, 80, 400, 40);
+            errorLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+            profilePanel.add(errorLabel);
+        }
 
         // Menambahkan panel ke frame
         frame.add(profilePanel);

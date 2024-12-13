@@ -11,7 +11,7 @@ public class ProfilePanti {
     public ProfilePanti(int userId) {
         this.userId = userId;
         // Membuat JFrame untuk ProfilePanti
-        JFrame frame = new JFrame("Profile Donatur");
+        JFrame frame = new JFrame("Profile Panti");
         frame.setSize(1440, 900);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
@@ -63,7 +63,7 @@ public class ProfilePanti {
         profilePanel.setLayout(null);
 
         // Contoh Konten Profile
-        JLabel profileLabel = new JLabel("<html><b>Profile Donatur</b></html>");
+        JLabel profileLabel = new JLabel("<html><b>Profile Panti</b></html>");
         profileLabel.setBounds(20, 20, 400, 40);
         profileLabel.setFont(new Font("Arial", Font.BOLD, 24));
         profilePanel.add(profileLabel);
