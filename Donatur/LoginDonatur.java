@@ -112,7 +112,7 @@ public class LoginDonatur extends JFrame {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
         
-            LoginConnection loginService = new LoginConnection();
+            LoginDonaturConnection loginService = new LoginDonaturConnection();
             int userId = loginService.validateUser(username, password);
         
             if (userId != -1) {

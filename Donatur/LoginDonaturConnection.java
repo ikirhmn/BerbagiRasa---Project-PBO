@@ -7,9 +7,9 @@ import java.sql.SQLException;
 
 import src.DatabaseConnection;
 
-public class LoginConnection {
+public class LoginDonaturConnection {
     public int validateUser(String username, String password) {
-        String query = "SELECT id FROM users WHERE username = ? AND password = ?";
+        String query = "SELECT id_donatur FROM donatur WHERE username = ? AND password = ?";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
 
@@ -18,7 +18,7 @@ public class LoginConnection {
 
             try (ResultSet rs = stmt.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt("id"); // Return userId jika ditemukan
+                    return rs.getInt("id_donatur"); // Return userId jika ditemukan
                 }
             }
         } catch (SQLException e) {
