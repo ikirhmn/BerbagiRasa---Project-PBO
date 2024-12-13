@@ -112,12 +112,12 @@ public class LoginPanti extends JFrame {
             String username = usernameField.getText();
             String password = new String(passwordField.getPassword());
         
-            LoginDonaturConnection loginService = new LoginDonaturConnection();
+            LoginPantiConnection loginService = new LoginPantiConnection();
             int userId = loginService.validateUser(username, password);
         
             if (userId != -1) {
                 // Login berhasil, buka BerandaDonatur dengan userId
-                new BerandaDonatur(userId);
+                new BerandaPanti(userId);
                 this.dispose(); // Menutup jendela login
             } else {
                 // Login gagal, tampilkan pesan kesalahan
