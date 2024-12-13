@@ -1,12 +1,12 @@
-package Donatur;
+package Panti;
 
 import javax.swing.*;
 
 import java.awt.*;
 
-public class LoginDonatur extends JFrame {
+public class LoginPanti extends JFrame {
 
-    public LoginDonatur() {
+    public LoginPanti() {
         // Set title dan ukuran awal jendela
         setTitle("Login - BerbagiRasa");
         setSize(900, 600); // Ubah ukuran agar lebih proporsional
