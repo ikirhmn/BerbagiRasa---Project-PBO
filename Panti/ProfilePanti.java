@@ -1,15 +1,21 @@
-//belum fix
 package Panti;
 import javax.swing.*;
-
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import src.DatabaseConnection;
 
 public class ProfilePanti {
     private int userId;
+
     public ProfilePanti(int userId) {
         this.userId = userId;
+
         // Membuat JFrame untuk ProfilePanti
         JFrame frame = new JFrame("Profile Panti");
         frame.setSize(1440, 900);
@@ -45,12 +51,11 @@ public class ProfilePanti {
         profileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         headerPanel.add(profileButton);
 
-
         berandaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Membuka Frame Riwayat
-                new BerandaPanti(userId);// Menutup JFrame utama jika diperlukan
+                new BerandaPanti(userId);
                 frame.dispose();
             }
         });
@@ -68,16 +73,41 @@ public class ProfilePanti {
         profileLabel.setFont(new Font("Arial", Font.BOLD, 24));
         profilePanel.add(profileLabel);
 
-        // Menampilkan informasi profil donatur (contoh)
-        JLabel nameLabel = new JLabel("Nama: John Doe");
-        nameLabel.setBounds(20, 80, 400, 40);
-        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        profilePanel.add(nameLabel);
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT nama, alamat FROM Panti WHERE id_panti = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(query)) {
+                stmt.setInt(1, userId);
 
-        JLabel emailLabel = new JLabel("Email: johndoe@example.com");
-        emailLabel.setBounds(20, 120, 400, 40);
-        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        profilePanel.add(emailLabel);
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        String nama = rs.getString("nama");
+                        String alamat = rs.getString("alamat");
+
+                        JLabel nameLabel = new JLabel("Nama: " + nama);
+                        nameLabel.setBounds(20, 80, 400, 40);
+                        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        profilePanel.add(nameLabel);
+
+                        JLabel addressLabel = new JLabel("Alamat: " + alamat);
+                        addressLabel.setBounds(20, 120, 400, 40);
+                        addressLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        profilePanel.add(addressLabel);
+                    } else {
+                        JLabel errorLabel = new JLabel("Data tidak ditemukan.");
+                        errorLabel.setBounds(20, 80, 400, 40);
+                        errorLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        profilePanel.add(errorLabel);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JLabel errorLabel = new JLabel("Terjadi kesalahan saat mengambil data.");
+            errorLabel.setBounds(20, 80, 400, 40);
+            errorLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+            profilePanel.add(errorLabel);
+        }
+
 
         // Menambahkan panel ke frame
         frame.add(profilePanel);

@@ -93,7 +93,7 @@ private int userId;
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 // Menggambar gambar latar di panel
-                ImageIcon bannerImage = new ImageIcon("G:\\BerbagiRasa---Project-PBO-main\\assets\\banner beranda.jpg");
+                ImageIcon bannerImage = new ImageIcon("assets\\banner beranda.jpg");
                 g.drawImage(bannerImage.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
