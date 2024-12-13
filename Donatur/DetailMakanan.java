@@ -1,11 +1,19 @@
 package Donatur;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import src.DatabaseConnection;
 
 public class DetailMakanan extends JDialog {
-    
-    public DetailMakanan(JFrame parent, String imagePath, String namaMakanan, String porsi) {
+
+    public DetailMakanan(JFrame parent, int makananId) {
         super(parent, "Detail Makanan", true);
         setSize(600, 450);
         setLocationRelativeTo(parent);
@@ -15,85 +23,122 @@ public class DetailMakanan extends JDialog {
         JPanel panelKiri = new JPanel();
         panelKiri.setLayout(new BorderLayout());
         panelKiri.setBackground(Color.WHITE);
-        
-        // Gambar Makanan
+
         JLabel imageLabel = new JLabel();
-        imageLabel.setIcon(new ImageIcon(new ImageIcon(imagePath).getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        panelKiri.add(imageLabel, BorderLayout.CENTER);
-        
+
         // Panel Detail Makanan (Kanan)
         JPanel panelDetail = new JPanel();
         panelDetail.setLayout(new GridLayout(6, 2, 10, 10));
         panelDetail.setBackground(Color.WHITE);
         panelDetail.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20)); // Padding di sekitar panel
 
-        // Nama Makanan
         JLabel lblNamaMakanan = new JLabel("Nama Makanan:");
-        JLabel lblNamaMakananValue = new JLabel(namaMakanan);
+        JLabel lblNamaMakananValue = new JLabel();
         panelDetail.add(lblNamaMakanan);
         panelDetail.add(lblNamaMakananValue);
 
-        // Porsi
         JLabel lblPorsi = new JLabel("Jumlah Porsi:");
-        JLabel lblPorsiValue = new JLabel(porsi);
+        JLabel lblPorsiValue = new JLabel();
         panelDetail.add(lblPorsi);
         panelDetail.add(lblPorsiValue);
 
-        // Waktu Kesediaan
         JLabel lblWaktu = new JLabel("Waktu Kesediaan:");
-        JLabel lblWaktuValue = new JLabel("12:00 PM"); // Misalnya waktu kesediaan
+        JLabel lblWaktuValue = new JLabel();
         panelDetail.add(lblWaktu);
         panelDetail.add(lblWaktuValue);
 
-        // Status
         JLabel lblStatus = new JLabel("Status:");
-        JLabel lblStatusValue = new JLabel("Belum ACC");
+        JLabel lblStatusValue = new JLabel();
         panelDetail.add(lblStatus);
         panelDetail.add(lblStatusValue);
 
-        // Nama Panti
         JLabel lblNamaPanti = new JLabel("Nama Panti:");
-        JLabel lblNamaPantiValue = new JLabel("Panti Asuhan ABC");
+        JLabel lblNamaPantiValue = new JLabel();
         panelDetail.add(lblNamaPanti);
         panelDetail.add(lblNamaPantiValue);
 
-        // Alamat Panti
         JLabel lblAlamatPanti = new JLabel("Alamat Panti:");
-        JLabel lblAlamatPantiValue = new JLabel("Jl. Panti Asuhan No. 1");
+        JLabel lblAlamatPantiValue = new JLabel();
         panelDetail.add(lblAlamatPanti);
         panelDetail.add(lblAlamatPantiValue);
 
-        // Tombol ACC
         JButton btnACC = new JButton("ACC");
         btnACC.setBackground(new Color(82, 170, 94));
         btnACC.setForeground(Color.WHITE);
         btnACC.setFont(new Font("Arial", Font.BOLD, 16));
         btnACC.setFocusPainted(false);
-        btnACC.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                lblStatusValue.setText("ACC");
-                btnACC.setEnabled(false); // Disable tombol setelah ACC
-            }
-        });
 
-        // Menambahkan Tombol ACC di bawah panel detail
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
         bottomPanel.add(btnACC);
 
-        // Panel utama untuk menampilkan foto dan detail makanan
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BorderLayout());
         contentPanel.add(panelKiri, BorderLayout.WEST);
         contentPanel.add(panelDetail, BorderLayout.CENTER);
-        
-        // Menambahkan contentPanel dan tombol di bawah
+
         add(contentPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
-        
+
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT m.nama, m.porsi, m.photo_path, m.waktu_ketersediaan, m.status, p.nama AS nama_panti, p.alamat AS alamat_panti " +
+                    "FROM Makanan m " +
+                    "LEFT JOIN Panti p ON m.id_panti = p.id_panti " +
+                    "WHERE m.id_makanan = ?";
+
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, makananId);
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                lblNamaMakananValue.setText(rs.getString("nama"));
+                lblPorsiValue.setText(String.valueOf(rs.getInt("porsi")));
+                lblWaktuValue.setText(rs.getString("waktu_ketersediaan"));
+                lblStatusValue.setText(rs.getString("status"));
+                lblNamaPantiValue.setText(rs.getString("nama_panti"));
+                lblAlamatPantiValue.setText(rs.getString("alamat_panti"));
+
+                String photoPath = rs.getString("photo_path");
+                if (photoPath != null && !photoPath.isEmpty()) {
+                    imageLabel.setIcon(new ImageIcon(new ImageIcon(photoPath).getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+                } else {
+                    imageLabel.setText("Tidak ada gambar");
+                }
+
+                if ("ACC".equalsIgnoreCase(rs.getString("status"))) {
+                    btnACC.setEnabled(false);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Data makanan tidak ditemukan.", "Error", JOptionPane.ERROR_MESSAGE);
+                dispose();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat mengambil data dari database.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        btnACC.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                    String updateQuery = "UPDATE Makanan SET status = 'ACC' WHERE id_makanan = ?";
+                    PreparedStatement stmt = conn.prepareStatement(updateQuery);
+                    stmt.setInt(1, makananId);
+
+                    int rowsUpdated = stmt.executeUpdate();
+                    if (rowsUpdated > 0) {
+                        lblStatusValue.setText("ACC");
+                        btnACC.setEnabled(false);
+                        JOptionPane.showMessageDialog(DetailMakanan.this, "Status berhasil diperbarui.", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(DetailMakanan.this, "Terjadi kesalahan saat memperbarui status.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
         setVisible(true);
     }
 }
-
