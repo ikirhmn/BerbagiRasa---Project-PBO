@@ -14,7 +14,7 @@ public class Start extends JFrame {
 
         // Membuat HeaderPanel yang sama dengan Beranda
         JPanel headerPanel = new JPanel();
-        headerPanel.setBounds(0, 0, 1440, 80);
+        headerPanel.setBounds(0, 0, 1600, 80);
         headerPanel.setBackground(new Color(50, 150, 64));
         headerPanel.setLayout(null);
 
@@ -35,7 +35,7 @@ public class Start extends JFrame {
 
         // Judul
         JLabel titleLabel = new JLabel("BerbagiRasa");
-        titleLabel.setBounds(30, 50, 600, 60);
+        titleLabel.setBounds(30, 50, 600, 80);
         titleLabel.setFont(new Font("Poppins", Font.BOLD, 54));
         titleLabel.setForeground(new Color(22, 22, 22));
         panelPertama.add(titleLabel);
@@ -48,7 +48,7 @@ public class Start extends JFrame {
                 + "Anda kepada panti asuhan, menciptakan kebahagiaan dan kebermanfaatan<br>"
                 + "di tengah kehidupan yang penuh makna."
                 + "</div></html>");
-        sloganLabel.setBounds(30, 120, 600, 200); // Tinggi label cukup untuk menampung teks
+        sloganLabel.setBounds(30, 140, 600, 200); // Tinggi label cukup untuk menampung teks
         sloganLabel.setFont(new Font("Poppins", Font.PLAIN, 16));
         sloganLabel.setForeground(Color.DARK_GRAY);
         sloganLabel.setVerticalAlignment(SwingConstants.TOP);
@@ -57,7 +57,7 @@ public class Start extends JFrame {
         // Tombol "Mulai Jelajahi"
         JButton mulaiButton = new JButton("Mulai Jelajahi");
         mulaiButton.setBounds(30, 300, 200, 50);
-        mulaiButton.setBackground(new Color(19, 85, 137));
+        mulaiButton.setBackground(new Color(50, 150, 64));
         mulaiButton.setForeground(Color.WHITE);
         mulaiButton.setFont(new Font("Poppins", Font.BOLD, 18));
         mulaiButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -67,12 +67,12 @@ public class Start extends JFrame {
         mulaiButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                mulaiButton.setBackground(new Color(37, 139, 220)); // Warna saat hover
+                mulaiButton.setBackground(new Color(70, 216, 89)); // Warna saat hover
             }
         
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                mulaiButton.setBackground(new Color(19, 85, 137)); // Warna kembali ke semula
+                mulaiButton.setBackground(new Color(50, 150, 64)); // Warna kembali ke semula
             }
         });
 
