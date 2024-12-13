@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class Start {
+public class Start extends JFrame {
     public static void main(String[] args) {
 
         JFrame frame = new JFrame("BerbagiRasa");
@@ -35,9 +35,9 @@ public class Start {
 
         // Judul
         JLabel titleLabel = new JLabel("BerbagiRasa");
-        titleLabel.setBounds(30, 50, 600, 50);
+        titleLabel.setBounds(30, 50, 600, 60);
         titleLabel.setFont(new Font("Poppins", Font.BOLD, 54));
-        titleLabel.setForeground(new Color(82, 170, 94));
+        titleLabel.setForeground(new Color(22, 22, 22));
         panelPertama.add(titleLabel);
 
         // Slogan
@@ -54,18 +54,31 @@ public class Start {
         sloganLabel.setVerticalAlignment(SwingConstants.TOP);
         panelPertama.add(sloganLabel);
 
-
-
         // Tombol "Mulai Jelajahi"
         JButton mulaiButton = new JButton("Mulai Jelajahi");
         mulaiButton.setBounds(30, 300, 200, 50);
-        mulaiButton.setBackground(new Color(82, 170, 94));
+        mulaiButton.setBackground(new Color(19, 85, 137));
         mulaiButton.setForeground(Color.WHITE);
         mulaiButton.setFont(new Font("Poppins", Font.BOLD, 18));
         mulaiButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         mulaiButton.setFocusPainted(false);
         mulaiButton.setBorderPainted(false);
+        
+        mulaiButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                mulaiButton.setBackground(new Color(37, 139, 220)); // Warna saat hover
+            }
+        
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                mulaiButton.setBackground(new Color(19, 85, 137)); // Warna kembali ke semula
+            }
+        });
+
         panelPertama.add(mulaiButton);
+
+
 
           ActionListener mulai = e -> {
             // Membuka kelas loginas

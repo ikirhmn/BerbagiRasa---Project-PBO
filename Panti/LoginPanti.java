@@ -1,7 +1,6 @@
 package Panti;
 
 import javax.swing.*;
-
 import java.awt.*;
 
 public class LoginPanti extends JFrame {
@@ -54,26 +53,38 @@ public class LoginPanti extends JFrame {
         gbc.insets = new Insets(10, 10, 10, 10); // Margin antar komponen
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel loginTitle = new JLabel("Login sebagai Donatur");
-        loginTitle.setFont(new Font("Poppins", Font.BOLD, 36));
+        JLabel loginTitle = new JLabel("Login sebagai Panti Asuhan");
+        loginTitle.setFont(new Font("Poppins", Font.BOLD, 24));
         loginTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel usernameLabel = new JLabel("Username");
         usernameLabel.setFont(new Font("Poppins", Font.PLAIN, 14));
 
         JTextField usernameField = new JTextField();
-        usernameField.setPreferredSize(new Dimension(300, 30));
+        usernameField.setPreferredSize(new Dimension(350, 30));
 
         JLabel passwordLabel = new JLabel("Password");
         passwordLabel.setFont(new Font("Poppins", Font.PLAIN, 14));
 
         JPasswordField passwordField = new JPasswordField();
-        passwordField.setPreferredSize(new Dimension(300, 30));
+        passwordField.setPreferredSize(new Dimension(350, 30));
 
         JButton loginButton = new JButton("Masuk");
         loginButton.setFont(new Font("Poppins", Font.BOLD, 14));
-        loginButton.setBackground(new Color(55, 196, 199));
+        loginButton.setBackground(new Color(19, 85, 137));
         loginButton.setForeground(Color.WHITE);
+
+        loginButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                loginButton.setBackground(new Color(37, 139, 220)); // Warna saat hover
+            }
+        
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                loginButton.setBackground(new Color(19, 85, 137)); // Warna kembali ke semula
+            }
+        });
 
         // Tambahkan elemen ke panel kanan dengan GridBagConstraints
         gbc.gridx = 0;
