@@ -1,3 +1,5 @@
+//belum fix masih copypaste punya donatur
+
 package Panti;
 import javax.swing.*;
 
