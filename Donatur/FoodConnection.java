@@ -1,4 +1,4 @@
-package src;
+package Donatur;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import src.DatabaseConnection;
 
 public class FoodConnection {
 

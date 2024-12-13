@@ -1,4 +1,4 @@
-package src;
+package Donatur;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;

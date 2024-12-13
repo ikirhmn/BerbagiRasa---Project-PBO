@@ -1,6 +1,7 @@
-package src;
+package Donatur;
 
 import javax.swing.*;
+
 import java.awt.*;
 
 public class LoginDonatur extends JFrame {
@@ -18,7 +19,7 @@ public class LoginDonatur extends JFrame {
 
         // Panel kiri (Logo dan slogan)
         JPanel leftPanel = new JPanel();
-        leftPanel.setBackground(new Color(82, 170, 90));
+        leftPanel.setBackground(new Color(50, 150, 64));
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS)); // Layout vertikal
         leftPanel.setPreferredSize(new Dimension(400, 600));
 
@@ -124,13 +125,6 @@ public class LoginDonatur extends JFrame {
             }
         });
         
-    }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            LoginDonatur loginFrame = new LoginDonatur();
-            loginFrame.setVisible(true);
-        });
     }
     
 }

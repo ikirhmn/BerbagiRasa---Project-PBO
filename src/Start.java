@@ -2,7 +2,6 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class Start {
@@ -16,7 +15,7 @@ public class Start {
         // Membuat HeaderPanel yang sama dengan Beranda
         JPanel headerPanel = new JPanel();
         headerPanel.setBounds(0, 0, 1440, 80);
-        headerPanel.setBackground(new Color(82, 170, 94));
+        headerPanel.setBackground(new Color(50, 150, 64));
         headerPanel.setLayout(null);
 
         JLabel appName = new JLabel("BerbagiRasa");
@@ -25,30 +24,6 @@ public class Start {
         appName.setForeground(Color.WHITE);
         headerPanel.add(appName);
 
-        JButton berandaButton = createTransparentButton("Beranda");
-        berandaButton.setBounds(300, 20, 100, 40);
-        headerPanel.add(berandaButton);
-
-        JButton donasiButton = createTransparentButton("Donasi");
-        donasiButton.setBounds(420, 20, 100, 40);
-        headerPanel.add(donasiButton);
-
-        JButton riwayatButton = createTransparentButton("Riwayat");
-        riwayatButton.setBounds(540, 20, 100, 40);
-        headerPanel.add(riwayatButton);
-
-        JButton profileButton = new JButton();
-        profileButton.setBounds(1250, 10, 60, 60);
-        profileButton.setFocusPainted(false);
-        profileButton.setBorder(BorderFactory.createEmptyBorder());
-        profileButton.setContentAreaFilled(false);
-        profileButton.setOpaque(true);
-        profileButton.setBackground(Color.WHITE);
-        profileButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        profileButton.setFont(new Font("Poppins", Font.BOLD, 20));
-        profileButton.setText("P");
-        profileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-        headerPanel.add(profileButton);
 
         frame.add(headerPanel);
 
@@ -92,18 +67,6 @@ public class Start {
         mulaiButton.setBorderPainted(false);
         panelPertama.add(mulaiButton);
 
-          // ActionListener untuk membuka halaman Login
-          ActionListener goToLogin = e -> { 
-            Login loginFrame = new Login(); // Membuat instance dari halaman login
-            loginFrame.setVisible(true); // Menampilkan halaman login
-          };
-
-          // Tambahkan ActionListener ke semua tombol
-          berandaButton.addActionListener(goToLogin);
-          donasiButton.addActionListener(goToLogin);
-          riwayatButton.addActionListener(goToLogin);
-          profileButton.addActionListener(goToLogin);
-
           ActionListener mulai = e -> {
             // Membuka kelas loginas
             new loginas();
@@ -131,6 +94,7 @@ public class Start {
         frame.add(panelKedua);
 
         // Tampilkan Frame
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }
 

@@ -1,5 +1,8 @@
-package src;
+package Donatur;
 import javax.swing.*;
+
+import src.Makanan;
+
 import java.awt.*;
 import java.util.List;
 import java.awt.event.ActionEvent;
@@ -195,6 +198,7 @@ private int userId;
          frame.add(foodPanel);
  
          // Menampilkan JFrame
+         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
          frame.setVisible(true);
      }
  

@@ -1,15 +1,16 @@
-package src;
+package Donatur;
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Donasi {
-    private int userId;  // Menambahkan atribut userId
-    public Donasi(int userId) {
+public class ProfileDonatur {
+    private int userId;
+    public ProfileDonatur(int userId) {
         this.userId = userId;
-        // Membuat JFrame untuk Donasi
-        JFrame frame = new JFrame("Donasi");
+        // Membuat JFrame untuk ProfileDonatur
+        JFrame frame = new JFrame("Profile Donatur");
         frame.setSize(1440, 900);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
@@ -17,7 +18,7 @@ public class Donasi {
         // Membuat HeaderPanel yang sama dengan Beranda
         JPanel headerPanel = new JPanel();
         headerPanel.setBounds(0, 0, 1440, 80);
-        headerPanel.setBackground(new Color(82, 170, 94));
+        headerPanel.setBackground(new Color(50, 150, 64));
         headerPanel.setLayout(null);
 
         JLabel appName = new JLabel("BerbagiRasa");
@@ -57,7 +58,17 @@ public class Donasi {
             public void actionPerformed(ActionEvent e) {
                 // Membuka Frame Riwayat
                 new RiwayatDonatur(userId);
-                frame.dispose(); // Menutup JFrame Donasi
+                frame.dispose(); // Menutup JFrame ProfileDonatur
+            }
+        });
+
+        // Button Donasi
+        donasiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka Frame Donasi
+                new Donasi(userId);
+                frame.dispose(); // Menutup JFrame ProfileDonatur
             }
         });
 
@@ -65,53 +76,40 @@ public class Donasi {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Membuka Frame Riwayat
-                new BerandaDonatur(userId); // Menutup JFrame utama jika diperlukan
+                new BerandaDonatur(userId);// Menutup JFrame utama jika diperlukan
                 frame.dispose();
-            }
-        });
-
-        // Button Profile
-        profileButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Membuka Frame Profile
-                new ProfileDonatur(userId);
-                frame.dispose(); // Menutup JFrame Donasi
             }
         });
 
         frame.add(headerPanel);
 
-        // Panel Konten Donasi
-        JPanel donasiPanel = new JPanel();
-        donasiPanel.setBounds(0, 80, 1440, 800);
-        donasiPanel.setLayout(null);
+        // Panel Konten Profile
+        JPanel profilePanel = new JPanel();
+        profilePanel.setBounds(0, 80, 1440, 800);
+        profilePanel.setLayout(null);
 
-        // Contoh Konten Donasi
-        JLabel donasiLabel = new JLabel("<html><b>Form Donasi</b></html>");
-        donasiLabel.setBounds(20, 20, 400, 40);
-        donasiLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        donasiPanel.add(donasiLabel);
+        // Contoh Konten Profile
+        JLabel profileLabel = new JLabel("<html><b>Profile Donatur</b></html>");
+        profileLabel.setBounds(20, 20, 400, 40);
+        profileLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        profilePanel.add(profileLabel);
 
-        // Menampilkan form donasi (contoh)
-        JLabel namaMakananLabel = new JLabel("Nama Makanan:");
-        namaMakananLabel.setBounds(20, 80, 400, 40);
-        namaMakananLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        donasiPanel.add(namaMakananLabel);
+        // Menampilkan informasi profil donatur (contoh)
+        JLabel nameLabel = new JLabel("Nama: John Doe");
+        nameLabel.setBounds(20, 80, 400, 40);
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        profilePanel.add(nameLabel);
 
-        JTextField namaMakananField = new JTextField();
-        namaMakananField.setBounds(20, 120, 400, 30);
-        donasiPanel.add(namaMakananField);
-
-        // Tombol Donasi
-        JButton donasiButtonFinal = new JButton("Donasi");
-        donasiButtonFinal.setBounds(20, 160, 200, 40);
-        donasiPanel.add(donasiButtonFinal);
+        JLabel emailLabel = new JLabel("Email: johndoe@example.com");
+        emailLabel.setBounds(20, 120, 400, 40);
+        emailLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+        profilePanel.add(emailLabel);
 
         // Menambahkan panel ke frame
-        frame.add(donasiPanel);
+        frame.add(profilePanel);
 
-        // Menampilkan JFrame Donasi
+        // Menampilkan JFrame ProfileDonatur
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }
 
