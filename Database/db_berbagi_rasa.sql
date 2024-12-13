@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 07, 2024 at 04:48 PM
+-- Generation Time: Dec 13, 2024 at 06:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -24,78 +24,162 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `foods`
+-- Table structure for table `donatur`
 --
 
-CREATE TABLE `foods` (
-  `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `portions` int(11) NOT NULL,
-  `imagePath` varchar(255) NOT NULL,
-  `userId` int(11) NOT NULL
+CREATE TABLE `donatur` (
+  `id_donatur` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `profile_path` varchar(255) DEFAULT NULL,
+  `alamat` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `foods`
+-- Dumping data for table `donatur`
 --
 
-INSERT INTO `foods` (`id`, `name`, `portions`, `imagePath`, `userId`) VALUES
-(1, 'Sate', 200, 'assets/sate.jpg', 1),
-(2, 'Nasi Goreng', 100, 'assets/nasi goreng.jpg', 1),
-(3, 'Bakso', 150, 'assets/bakso.jpg', 1),
-(4, 'Tumpeng', 150, 'assets/Tumpeng.jpg', 1);
+INSERT INTO `donatur` (`id_donatur`, `nama`, `username`, `password`, `profile_path`, `alamat`) VALUES
+(1, 'Amanah', 'resto1', 'resto1', 'assets/profile/profile1.jpg', 'Jl. Merdeka No. 1');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Table structure for table `makanan`
 --
 
-CREATE TABLE `users` (
-  `id` int(11) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `password` varchar(255) NOT NULL
+CREATE TABLE `makanan` (
+  `id_makanan` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `porsi` int(11) NOT NULL,
+  `photo_path` varchar(255) DEFAULT NULL,
+  `waktu_ketersediaan` datetime NOT NULL,
+  `status` enum('Belum ACC','ACC') DEFAULT 'Belum ACC',
+  `id_donatur` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Dumping data for table `makanan`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`) VALUES
-(1, 'restoran1', 'restoran1');
+INSERT INTO `makanan` (`id_makanan`, `nama`, `porsi`, `photo_path`, `waktu_ketersediaan`, `status`, `id_donatur`) VALUES
+(1, 'Nasi Goreng', 200, 'D:\\Project PBO\\BerbagiRasa---Project-PBO\\assets\\makanan\\nasi goreng.jpg', '2025-01-14 01:23:50', 'Belum ACC', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `panti`
+--
+
+CREATE TABLE `panti` (
+  `id_panti` int(11) NOT NULL,
+  `nama` varchar(100) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `profile_path` varchar(255) DEFAULT NULL,
+  `alamat` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `panti`
+--
+
+INSERT INTO `panti` (`id_panti`, `nama`, `username`, `password`, `profile_path`, `alamat`) VALUES
+(1, 'Panti Asuhan Kasih', 'panti1', 'panti1', 'assets\\profile\\profile2.jpg', 'Jl. Mawar No. 10, Jakarta');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `permintaan`
+--
+
+CREATE TABLE `permintaan` (
+  `id_permintaan` int(11) NOT NULL,
+  `id_panti` int(11) NOT NULL,
+  `id_makanan` int(11) NOT NULL,
+  `tanggal_permintaan` datetime NOT NULL DEFAULT current_timestamp(),
+  `tanggal_acc` datetime DEFAULT NULL,
+  `status` enum('Belum ACC','ACC') DEFAULT 'Belum ACC'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indexes for table `foods`
+-- Indexes for table `donatur`
 --
-ALTER TABLE `foods`
-  ADD PRIMARY KEY (`id`);
+ALTER TABLE `donatur`
+  ADD PRIMARY KEY (`id_donatur`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
--- Indexes for table `users`
+-- Indexes for table `makanan`
 --
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
+ALTER TABLE `makanan`
+  ADD PRIMARY KEY (`id_makanan`),
+  ADD KEY `id_donatur` (`id_donatur`);
+
+--
+-- Indexes for table `panti`
+--
+ALTER TABLE `panti`
+  ADD PRIMARY KEY (`id_panti`),
   ADD UNIQUE KEY `username` (`username`);
+
+--
+-- Indexes for table `permintaan`
+--
+ALTER TABLE `permintaan`
+  ADD PRIMARY KEY (`id_permintaan`),
+  ADD KEY `id_panti` (`id_panti`),
+  ADD KEY `id_makanan` (`id_makanan`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
 
 --
--- AUTO_INCREMENT for table `foods`
+-- AUTO_INCREMENT for table `donatur`
 --
-ALTER TABLE `foods`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+ALTER TABLE `donatur`
+  MODIFY `id_donatur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `users`
+-- AUTO_INCREMENT for table `makanan`
 --
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+ALTER TABLE `makanan`
+  MODIFY `id_makanan` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `panti`
+--
+ALTER TABLE `panti`
+  MODIFY `id_panti` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `permintaan`
+--
+ALTER TABLE `permintaan`
+  MODIFY `id_permintaan` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `makanan`
+--
+ALTER TABLE `makanan`
+  ADD CONSTRAINT `makanan_ibfk_1` FOREIGN KEY (`id_donatur`) REFERENCES `donatur` (`id_donatur`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `permintaan`
+--
+ALTER TABLE `permintaan`
+  ADD CONSTRAINT `permintaan_ibfk_1` FOREIGN KEY (`id_panti`) REFERENCES `panti` (`id_panti`) ON DELETE CASCADE,
+  ADD CONSTRAINT `permintaan_ibfk_2` FOREIGN KEY (`id_makanan`) REFERENCES `makanan` (`id_makanan`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
