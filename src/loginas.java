@@ -57,8 +57,7 @@ public class loginas {
 
         JLabel iconLabel = new JLabel();
         iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        ImageIcon icon = new ImageIcon("assets\\loginas.png"); // Ganti path gambar sesuai
-                                                                                          // kebutuhan
+        ImageIcon icon = new ImageIcon("assets\\loginas.png"); // Ganti path gambar sesuai kebutuhan
         iconLabel.setIcon(new ImageIcon(icon.getImage().getScaledInstance(600, 600, Image.SCALE_SMOOTH)));
         panelPertama.add(iconLabel, BorderLayout.CENTER);
 
@@ -75,17 +74,19 @@ public class loginas {
         JButton donaturButton = new JButton("Login as Donatur");
         donaturButton.setFont(new Font("Arial", Font.PLAIN, 18));
         donaturButton.setPreferredSize(new Dimension(250, 40)); // Ukuran tombol
-        donaturButton.setBackground(new Color(19, 85, 137)); // Warna sesuai RGB
+        donaturButton.setBackground(new Color(50, 150, 64)); // Warna sesuai RGB
         donaturButton.setForeground(Color.WHITE); // Warna teks putih
+        donaturButton.setHorizontalAlignment(SwingConstants.CENTER); // Teks rata tengah horizontal
+        donaturButton.setVerticalAlignment(SwingConstants.CENTER);
         donaturButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                donaturButton.setBackground(new Color(37, 139, 220)); // Warna saat hover
+                donaturButton.setBackground(new Color(70, 216, 89)); // Warna saat hover
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                donaturButton.setBackground(new Color(19, 85, 137)); // Warna kembali ke semula
+                donaturButton.setBackground(new Color(50, 150, 64)); // Warna kembali ke semula
             }
         });
         panelKedua.add(donaturButton);
@@ -97,17 +98,19 @@ public class loginas {
         JButton pantiButton = new JButton("Login as Panti Asuhan");
         pantiButton.setFont(new Font("Arial", Font.PLAIN, 18));
         pantiButton.setPreferredSize(new Dimension(250, 40)); // Ukuran tombol
-        pantiButton.setBackground(new Color(19, 85, 137)); // Warna sesuai RGB
+        pantiButton.setBackground(new Color(50, 150, 64)); // Warna sesuai RGB
         pantiButton.setForeground(Color.WHITE); // Warna teks putih
+        pantiButton.setHorizontalAlignment(SwingConstants.CENTER); // Teks rata tengah horizontal
+        pantiButton.setVerticalAlignment(SwingConstants.CENTER); // Teks rata tengah vertikal
         pantiButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                pantiButton.setBackground(new Color(37, 139, 220)); // Warna saat hover
+                pantiButton.setBackground(new Color(70, 216, 89)); // Warna saat hover
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                pantiButton.setBackground(new Color(19, 85, 137)); // Warna kembali ke semula
+                pantiButton.setBackground(new Color(50, 150, 64)); // Warna kembali ke semula
             }
         });
         panelKedua.add(pantiButton);
