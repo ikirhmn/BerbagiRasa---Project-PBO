@@ -105,14 +105,6 @@ private int userId;
          foodTitle.setFont(new Font("Arial", Font.BOLD, 24));
          foodPanel.add(foodTitle);
 
-        // Tombol "Tambah Donasi"
-        JButton tambahDonasiButton = new JButton("Tambah Donasi");
-        tambahDonasiButton.setBounds(1130, 20, 180, 40);
-        tambahDonasiButton.setBackground(new Color(55, 156, 199));
-        tambahDonasiButton.setForeground(Color.WHITE);
-        tambahDonasiButton.setFont(new Font("Arial", Font.BOLD, 14));
-        tambahDonasiButton.setBorderPainted(false); // Tidak ada border pada tombol
-        foodPanel.add(tambahDonasiButton);
  
          // Panel untuk kartu makanan (menggunakan ScrollPane)
          JScrollPane foodScrollPane = new JScrollPane();
