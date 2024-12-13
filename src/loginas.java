@@ -3,6 +3,7 @@ package src;
 import javax.swing.*;
 
 import Donatur.LoginDonatur;
+import Panti.LoginPanti;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
@@ -115,12 +116,12 @@ public class loginas {
             profileButton.addActionListener(goToLogin);
             donaturButton.addActionListener(goToLogin);
     
-            // ActionListener pantiLogin = e -> {
-            //     LoginPanti loginFrame = new LoginPanti(); // Membuat instance dari halaman login
-            //     loginFrame.setVisible(true); // Menampilkan halaman login
-            // };
+            ActionListener pantiLogin = e -> {
+                LoginPanti loginFrame = new LoginPanti(); // Membuat instance dari halaman login
+                loginFrame.setVisible(true); // Menampilkan halaman login
+            };
     
-            // pantiButton.addActionListener(pantiLogin);
+            pantiButton.addActionListener(pantiLogin);
     
             // Menambahkan kedua panel ke dalam frame
             frame.add(panelPertama);
