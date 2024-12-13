@@ -24,8 +24,8 @@ public class loginas {
 
         // Membuat HeaderPanel
         JPanel headerPanel = new JPanel();
-        headerPanel.setBounds(0, 0, 1440, 80);
-        headerPanel.setBackground(new Color(82, 170, 94));
+        headerPanel.setBounds(0, 0, 1600, 80);
+        headerPanel.setBackground(new Color(50, 150, 64));
         headerPanel.setLayout(null);
 
         // Menambahkan tombol dengan ikon arrow
