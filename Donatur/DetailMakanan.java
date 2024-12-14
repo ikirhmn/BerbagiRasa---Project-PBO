@@ -97,14 +97,14 @@ public class DetailMakanan extends JDialog {
                     FROM makanan m
                     LEFT JOIN panti p ON m.id_panti = p.id_panti
                     WHERE m.id_makanan = ?
-                    """;
+                           """;
 
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setInt(1, id_makanan);
             System.out.println("Makanan ID yang diteruskan: " + id_makanan);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                System.out.println("Nama makanan: " + rs.getString("nama"));
+                lblNamaMakananValue.setText(rs.getString("nama"));
                 lblPorsiValue.setText(String.valueOf(rs.getInt("porsi")));
                 lblWaktuValue.setText(rs.getString("waktu_ketersediaan"));
                 lblStatusValue.setText(rs.getString("status"));
@@ -132,9 +132,9 @@ public class DetailMakanan extends JDialog {
                     btnACC.setEnabled(false);
                 }
             } else {
-                JOptionPane.showMessageDialog(this,
-                "Data makanan tidak ditemukan untuk ID: " + id_makanan, "Error",
-                JOptionPane.ERROR_MESSAGE);            
+                JOptionPane.showMessageDialog(this, "Data makanan tidak ditemukan.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                dispose();
                 return;
             }
         } catch (SQLException e) {
