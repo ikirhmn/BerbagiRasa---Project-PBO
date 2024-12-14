@@ -163,93 +163,70 @@ public class BerandaDonatur {
             String photoPath = foodData[3];
 
             JPanel card = new JPanel();
-            card.setPreferredSize(new Dimension(200, 230));
-            card.setLayout(null);
-            card.setBackground(Color.WHITE);
-            card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+             card.setPreferredSize(new Dimension(200, 260));
+             card.setLayout(null);
 
-            // Foto makanan
-            JLabel foodImage = new JLabel();
-            foodImage.setBounds(10, 10, 180, 120);
-            foodImage.setIcon(new ImageIcon(
-                    new ImageIcon(photoPath).getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH)));
-            card.add(foodImage);
-
-            // Tombol Req (disabled)
-            JButton reqButton = new JButton("Req");
-            reqButton.setBounds(10, 140, 180, 30);
-            reqButton.setEnabled(false);
-            reqButton.setBackground(Color.LIGHT_GRAY);
-            reqButton.setForeground(Color.WHITE);
-            reqButton.setFont(new Font("Arial", Font.BOLD, 14));
-            reqButton.setBorderPainted(false);
-            card.add(reqButton);
-
-            // Label nama makanan
-            JLabel foodName = new JLabel(nama, SwingConstants.CENTER);
-            foodName.setBounds(10, 180, 180, 20);
-            foodName.setFont(new Font("Arial", Font.PLAIN, 16));
-            foodName.setHorizontalAlignment(SwingConstants.LEFT);
-            card.add(foodName);
-
-            // Label porsi
-            JLabel foodPortion = new JLabel("Porsi: " + porsi, SwingConstants.CENTER);
-            foodPortion.setBounds(10, 210, 180, 20);
-            foodPortion.setFont(new Font("Arial", Font.PLAIN, 14));
-            foodPortion.setHorizontalAlignment(SwingConstants.LEFT);
-            card.add(foodPortion);
-
-            card.addMouseListener(new java.awt.event.MouseAdapter() {
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    try {
-                        int idMakanan = Integer.parseInt(foodData[0]); 
-                        DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
-                        detailFrame.setVisible(true);
-
-                        detailFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-                            @Override
-                            public void windowClosing(java.awt.event.WindowEvent e) {
-                                frame.setVisible(true); 
+             // Foto makanan
+             JLabel foodImage = new JLabel();
+             foodImage.setBounds(10, 10, 180, 120);
+             foodImage.setIcon(new ImageIcon(new ImageIcon(makanan.getImagePath()).getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH)));
+             card.add(foodImage);
+ 
+             // Tombol Req (disabled)
+             JButton reqButton = new JButton("Req");
+             reqButton.setBounds(10, 140, 180, 30);
+             reqButton.setEnabled(false);
+             reqButton.setBackground(Color.LIGHT_GRAY);
+             reqButton.setForeground(Color.WHITE);
+             reqButton.setFont(new Font("Arial", Font.BOLD, 14));
+             reqButton.setBorderPainted(false);
+             card.add(reqButton);
+ 
+             // Label nama makanan
+             JLabel foodName = new JLabel(makanan.getNama());
+             foodName.setBounds(10, 180, 180, 20);
+             foodName.setFont(new Font("Arial", Font.PLAIN, 16));
+             foodName.setHorizontalAlignment(SwingConstants.LEFT);
+             card.add(foodName);
+ 
+             // Label porsi
+             JLabel foodPortion = new JLabel("Porsi: " + makanan.getPorsi());
+             foodPortion.setBounds(10, 210, 180, 20);
+             foodPortion.setFont(new Font("Arial", Font.PLAIN, 14));
+             foodPortion.setHorizontalAlignment(SwingConstants.LEFT);
+             card.add(foodPortion);
+            
+             // Menambahkan event klik pada card untuk membuka 
+                        card.addMouseListener(new java.awt.event.MouseAdapter() {
+                            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                                new DetailMakanan(frame, makanan.getImagePath(), makanan.getNama(), makanan.getPorsi()).setVisible(true);
                             }
                         });
-                    } catch (NumberFormatException e) {
-                        String namaMakanan = foodData[1]; 
-                        int idMakanan = cariIdMakanan(namaMakanan);
 
-                        if (idMakanan != 0) {
-                            DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
-                            detailFrame.setVisible(true);
-                        } else {
-                            JOptionPane.showMessageDialog(frame, "Makanan tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                }
-            });
-
-            foodCardPanel.add(card);
-        }
-
-        foodScrollPane.setViewportView(foodCardPanel);
-        foodPanel.add(foodScrollPane);
-
-        frame.add(foodPanel);
-
-        // Menampilkan JFrame
-        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        frame.setVisible(true);
-    }
-
-    // Fungsi untuk membuat tombol transparan
-    private static JButton createTransparentButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(new Font("Arial", Font.PLAIN, 16));
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder());
-        button.setContentAreaFilled(false);
-        button.setForeground(Color.WHITE);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return button;
-    }
+             foodCardPanel.add(card);
+         }
+ 
+         foodScrollPane.setViewportView(foodCardPanel);
+         foodPanel.add(foodScrollPane);
+ 
+         frame.add(foodPanel);
+ 
+         // Menampilkan JFrame
+         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+         frame.setVisible(true);
+     }
+ 
+     // Fungsi untuk membuat tombol transparan
+     private static JButton createTransparentButton(String text) {
+         JButton button = new JButton(text);
+         button.setFont(new Font("Arial", Font.PLAIN, 16));
+         button.setFocusPainted(false);
+         button.setBorder(BorderFactory.createEmptyBorder());
+         button.setContentAreaFilled(false);
+         button.setForeground(Color.WHITE);
+         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+         return button;
+     }
 
      private int cariIdMakanan(String namaMakanan) {
         int id = 0;
