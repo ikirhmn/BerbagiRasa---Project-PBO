@@ -149,47 +149,47 @@ private int userId;
         for (String[] foodData : foodDataList) {
             Makanan makanan = new Makanan(foodData[0], foodData[1], foodData[2]);
             JPanel card = new JPanel();
-             card.setPreferredSize(new Dimension(200, 260));
-             card.setLayout(null);
+            card.setPreferredSize(new Dimension(200, 260));
+            card.setLayout(null);
 
-             // Foto makanan
-             JLabel foodImage = new JLabel();
-             foodImage.setBounds(10, 10, 180, 120);
-             foodImage.setIcon(new ImageIcon(new ImageIcon(makanan.getImagePath()).getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH)));
-             card.add(foodImage);
+            // Foto makanan
+            JLabel foodImage = new JLabel();
+            foodImage.setBounds(10, 10, 180, 120);
+            foodImage.setIcon(new ImageIcon(new ImageIcon(makanan.getImagePath()).getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH)));
+            card.add(foodImage);
  
-             // Tombol Req (disabled)
-             JButton reqButton = new JButton("Req");
-             reqButton.setBounds(10, 140, 180, 30);
-             reqButton.setEnabled(false);
-             reqButton.setBackground(Color.LIGHT_GRAY);
-             reqButton.setForeground(Color.WHITE);
-             reqButton.setFont(new Font("Arial", Font.BOLD, 14));
-             reqButton.setBorderPainted(false);
-             card.add(reqButton);
- 
-             // Label nama makanan
-             JLabel foodName = new JLabel(makanan.getNama());
-             foodName.setBounds(10, 180, 180, 20);
-             foodName.setFont(new Font("Arial", Font.PLAIN, 16));
-             foodName.setHorizontalAlignment(SwingConstants.LEFT);
-             card.add(foodName);
- 
-             // Label porsi
-             JLabel foodPortion = new JLabel("Porsi: " + makanan.getPorsi());
-             foodPortion.setBounds(10, 210, 180, 20);
-             foodPortion.setFont(new Font("Arial", Font.PLAIN, 14));
-             foodPortion.setHorizontalAlignment(SwingConstants.LEFT);
-             card.add(foodPortion);
+            // Tombol Req (disabled)
+            JButton reqButton = new JButton("Req");
+            reqButton.setBounds(10, 140, 180, 30);
+            reqButton.setEnabled(false);
+            reqButton.setBackground(Color.LIGHT_GRAY);
+            reqButton.setForeground(Color.WHITE);
+            reqButton.setFont(new Font("Arial", Font.BOLD, 14));
+            reqButton.setBorderPainted(false);
+            card.add(reqButton);
+
+            // Label nama makanan
+            JLabel foodName = new JLabel(makanan.getNama());
+            foodName.setBounds(10, 180, 180, 20);
+            foodName.setFont(new Font("Arial", Font.PLAIN, 16));
+            foodName.setHorizontalAlignment(SwingConstants.LEFT);
+            card.add(foodName);
+
+            // Label porsi
+            JLabel foodPortion = new JLabel("Porsi: " + makanan.getPorsi());
+            foodPortion.setBounds(10, 210, 180, 20);
+            foodPortion.setFont(new Font("Arial", Font.PLAIN, 14));
+            foodPortion.setHorizontalAlignment(SwingConstants.LEFT);
+            card.add(foodPortion);
             
              // Menambahkan event klik pada card untuk membuka 
-                        card.addMouseListener(new java.awt.event.MouseAdapter() {
-                            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                                new DetailMakanan(frame, makanan.getImagePath(), makanan.getNama(), makanan.getPorsi()).setVisible(true);
-                            }
-                        });
+            card.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    new DetailMakanan(frame, makanan.getImagePath(), makanan.getNama(), makanan.getPorsi()).setVisible(true);
+                }
+            });
 
-             foodCardPanel.add(card);
+            foodCardPanel.add(card);
          }
  
          foodScrollPane.setViewportView(foodCardPanel);
