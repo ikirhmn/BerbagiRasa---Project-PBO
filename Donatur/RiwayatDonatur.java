@@ -38,7 +38,7 @@ public class RiwayatDonatur {
         // Tombol Navigasi
         JButton berandaButton = createTransparentButton("Beranda");
         berandaButton.setBounds(320, 20, 100, 40);
-        berandaButton.setFont(new Font("Poppins", Font.BOLD, 16));
+        berandaButton.setFont(new Font("Poppins", Font.PLAIN, 16));
         headerPanel.add(berandaButton);
 
         JButton donasiButton = createTransparentButton("Donasi");
@@ -48,7 +48,7 @@ public class RiwayatDonatur {
 
         JButton riwayatButton = createTransparentButton("Riwayat");
         riwayatButton.setBounds(560, 20, 100, 40);
-        riwayatButton.setFont(new Font("Poppins", Font.PLAIN, 16));
+        riwayatButton.setFont(new Font("Poppins", Font.BOLD, 16));
         headerPanel.add(riwayatButton);
 
         // Tombol Profil
@@ -69,11 +69,11 @@ public class RiwayatDonatur {
         rootPanel.add(headerPanel, BorderLayout.NORTH);
 
         // Button Riwayat
-        riwayatButton.addActionListener(new ActionListener() {
+        berandaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Membuka Frame Riwayat
-                new RiwayatDonatur(userId);
+                new BerandaDonatur(userId);
                 frame.dispose(); // Menutup JFrame utama jika diperlukan
             }
         });

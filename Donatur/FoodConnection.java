@@ -12,7 +12,7 @@ import src.DatabaseConnection;
 public class FoodConnection {
     public List<String[]> getFoods(int idDonatur) {
         List<String[]> foodList = new ArrayList<>();
-        String query = "SELECT nama, porsi, photo_path FROM Makanan WHERE id_donatur = ?";
+        String query = "SELECT id_makanan, nama, porsi, photo_path FROM makanan WHERE id_donatur = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {
@@ -23,10 +23,15 @@ public class FoodConnection {
             // Eksekusi query dan baca hasilnya
             try (ResultSet rs = stmt.executeQuery()) {
                 while (rs.next()) {
-                    String nama = rs.getString("nama");
-                    String porsi = String.valueOf(rs.getInt("porsi"));
-                    String photoPath = rs.getString("photo_path");
-                    foodList.add(new String[]{nama, porsi, photoPath});
+                String idMakanan = String.valueOf(rs.getInt("id_makanan"));
+                String nama = rs.getString("nama");
+                String porsi = String.valueOf(rs.getInt("porsi"));
+                String photoPath = rs.getString("photo_path");
+                   // Log data yang ditambahkan ke foodList
+                System.out.println("Data makanan: " + idMakanan + ", " + nama + ", " + porsi + ", " + photoPath);
+
+                foodList.add(new String[]{idMakanan, nama, porsi, photoPath});
+
                 }
             }
         } catch (SQLException e) {

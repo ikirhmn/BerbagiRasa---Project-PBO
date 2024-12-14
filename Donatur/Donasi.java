@@ -3,13 +3,11 @@ package Donatur;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import src.DatabaseConnection;
 
@@ -141,7 +139,6 @@ public class Donasi {
 
                 stmt.executeUpdate();
                 JOptionPane.showMessageDialog(frame, "Donasi berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
-                frame.dispose();
                 new BerandaDonatur(userId);
             } catch (SQLException ex) {
                 ex.printStackTrace();

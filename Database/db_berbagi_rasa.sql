@@ -74,18 +74,18 @@ INSERT INTO `makanan` (`id_makanan`, `nama`, `porsi`, `photo_path`, `waktu_keter
 
 CREATE TABLE `panti` (
   `id_panti` int(11) NOT NULL,
-  `nama` varchar(100) NOT NULL,
+  `nama_panti` varchar(100) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(255) NOT NULL,
   `profile_path` varchar(255) DEFAULT NULL,
-  `alamat` text DEFAULT NULL
+  `alamat_panti` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `panti`
 --
 
-INSERT INTO `panti` (`id_panti`, `nama`, `username`, `password`, `profile_path`, `alamat`) VALUES
+INSERT INTO `panti` (`id_panti`, `nama_panti`, `username`, `password`, `profile_path`, `alamat_panti`) VALUES
 (1, 'Panti Asuhan Kasih', 'panti1', 'panti1', 'assets\\profile\\profile2.jpg', 'Jl. Mawar No. 10, Jakarta');
 
 -- --------------------------------------------------------
