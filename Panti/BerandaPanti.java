@@ -1,266 +1,254 @@
-// package Donatur;
+package Panti;
 
-// import javax.swing.*;
+import javax.swing.*;
 
-// import src.DatabaseConnection;
-// import src.Makanan;
+import Donatur.DetailMakanan;
+import Donatur.FoodConnection;
+import src.DatabaseConnection;
+import src.Makanan;
 
-// import java.awt.*;
-// import java.util.List;
-// import java.awt.event.ActionEvent;
-// import java.awt.event.ActionListener;
-// import java.sql.Connection;
-// import java.sql.PreparedStatement;
-// import java.sql.ResultSet;
-// import java.sql.SQLException;
+import java.awt.*;
+import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-// public class BerandaDonatur {
-//     private int userId;
+public class BerandaPanti {
+    private int userId;
 
-//     public BerandaDonatur(int userId) {
-//         this.userId = userId;
-//         JFrame frame = new JFrame("Beranda Aplikasi");
-//         frame.setSize(1440, 900);
-//         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//         frame.setLayout(null);
+    public BerandaPanti(int userId) {
+        this.userId = userId;
+        JFrame frame = new JFrame("Beranda Aplikasi");
+        frame.setSize(1440, 900);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setLayout(null);
 
-//         // Membuat HeaderPanel
-//         JPanel headerPanel = new JPanel();
-//         headerPanel.setBounds(0, 0, 1440, 80);
-//         headerPanel.setBackground(new Color(82, 170, 94));
-//         headerPanel.setLayout(null);
+        // Membuat HeaderPanel
+        JPanel headerPanel = new JPanel();
+        headerPanel.setBounds(0, 0, 1440, 80);
+        headerPanel.setBackground(new Color(82, 170, 94));
+        headerPanel.setLayout(null);
 
-//         JLabel appName = new JLabel("BerbagiRasa");
-//         appName.setBounds(20, 20, 300, 40);
-//         appName.setFont(new Font("Poppins", Font.BOLD, 34));
-//         appName.setForeground(Color.WHITE);
-//         headerPanel.add(appName);
+        // Menambahkan Label Aplikasi
+        JLabel appName = new JLabel("BerbagiRasa");
+        appName.setBounds(20, 20, 300, 40);
+        appName.setFont(new Font("Poppins", Font.BOLD, 34));
+        appName.setForeground(Color.WHITE);
+        headerPanel.add(appName);
 
-//         JButton berandaButton = createTransparentButton("Beranda");
-//         berandaButton.setBounds(300, 20, 100, 40);
-//         headerPanel.add(berandaButton);
+        // Tombol Navigasi
+        JButton berandaButton = createTransparentButton("Beranda");
+        berandaButton.setBounds(320, 20, 100, 40);
+        berandaButton.setFont(new Font("Poppins", Font.BOLD, 16));
+        headerPanel.add(berandaButton);
 
-//         JButton donasiButton = createTransparentButton("Donasi");
-//         donasiButton.setBounds(420, 20, 100, 40);
-//         headerPanel.add(donasiButton);
+        // Tombol Profil
+        JButton profileButton = new JButton();
+        profileButton.setBounds(1250, 10, 60, 60);
+        profileButton.setFocusPainted(false);
+        profileButton.setBorder(BorderFactory.createEmptyBorder());
+        profileButton.setContentAreaFilled(false);
+        profileButton.setOpaque(true);
+        profileButton.setBackground(Color.WHITE);
+        profileButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        profileButton.setFont(new Font("Poppins", Font.BOLD, 20));
+        profileButton.setText("P");
+        profileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        headerPanel.add(profileButton);
 
-//         JButton riwayatButton = createTransparentButton("Riwayat");
-//         riwayatButton.setBounds(540, 20, 100, 40);
-//         headerPanel.add(riwayatButton);
+        // Button Profile
+        profileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka Frame Profile
+                new ProfilePanti(userId);
+                frame.dispose(); // Menutup JFrame utama jika diperlukan
+            }
+        });
 
-//         JButton profileButton = new JButton();
-//         profileButton.setBounds(1250, 10, 60, 60);
-//         profileButton.setFocusPainted(false);
-//         profileButton.setBorder(BorderFactory.createEmptyBorder());
-//         profileButton.setContentAreaFilled(false);
-//         profileButton.setOpaque(true);
-//         profileButton.setBackground(Color.WHITE);
-//         profileButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//         profileButton.setFont(new Font("Poppins", Font.BOLD, 20));
-//         profileButton.setText("P");
-//         profileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-//         headerPanel.add(profileButton);
+        frame.add(headerPanel);
 
-//         // Button Riwayat
-//         riwayatButton.addActionListener(new ActionListener() {
-//             @Override
-//             public void actionPerformed(ActionEvent e) {
-//                 // Membuka Frame Riwayat
-//                 new RiwayatDonatur(userId);
-//                 frame.dispose(); // Menutup JFrame utama jika diperlukan
-//             }
-//         });
+        // Membuat BannerPanel
+        JPanel bannerPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Menggambar gambar latar di panel
+                ImageIcon bannerImage = new ImageIcon("assets\\banner beranda.jpg");
+                g.drawImage(bannerImage.getImage(), 0, 0, getWidth(), getHeight(), this);
+            }
+        };
+        bannerPanel.setBounds(0, 80, 1440, 300); // Di bawah HeaderPanel
+        bannerPanel.setLayout(null);
 
-//         // Button Donasi
-//         donasiButton.addActionListener(new ActionListener() {
-//             @Override
-//             public void actionPerformed(ActionEvent e) {
-//                 // Membuka Frame Donasi
-//                 new Donasi(userId);
-//                 frame.dispose(); // Menutup JFrame utama jika diperlukan
-//             }
-//         });
+        // Slogan di atas gambar
+        JLabel sloganLabel = new JLabel(
+                "<html><div style='text-align: left;'><b>Bagikan surplus makananmu<br>untuk membantu panti asuhan yang membutuhkan.</b></div></html>");
+        sloganLabel.setBounds(20, 150, 1440, 100); // Posisi dan ukuran slogan
+        sloganLabel.setFont(new Font("Poppins", Font.BOLD, 24));
+        sloganLabel.setForeground(Color.WHITE);
+        sloganLabel.setHorizontalAlignment(SwingConstants.LEFT);
 
-//         // Button Profile
-//         profileButton.addActionListener(new ActionListener() {
-//             @Override
-//             public void actionPerformed(ActionEvent e) {
-//                 // Membuka Frame Profile
-//                 new ProfileDonatur(userId);
-//                 frame.dispose(); // Menutup JFrame utama jika diperlukan
-//             }
-//         });
+        bannerPanel.add(sloganLabel);
+        frame.add(bannerPanel);
 
-//         frame.add(headerPanel);
+        // Panel Daftar Makanan
+        JPanel foodPanel = new JPanel();
+        foodPanel.setBounds(0, 380, 1440, 400);
+        foodPanel.setLayout(null);
 
-//         // Membuat BannerPanel
-//         JPanel bannerPanel = new JPanel() {
-//             @Override
-//             protected void paintComponent(Graphics g) {
-//                 super.paintComponent(g);
-//                 // Menggambar gambar latar di panel
-//                 ImageIcon bannerImage = new ImageIcon("assets\\banner beranda.jpg");
-//                 g.drawImage(bannerImage.getImage(), 0, 0, getWidth(), getHeight(), this);
-//             }
-//         };
-//         bannerPanel.setBounds(0, 80, 1440, 300); // Di bawah HeaderPanel
-//         bannerPanel.setLayout(null);
+        // Judul Daftar Makanan
+        JLabel foodTitle = new JLabel("Daftar Makanan");
+        foodTitle.setBounds(20, 20, 400, 40);
+        foodTitle.setFont(new Font("Arial", Font.BOLD, 24));
+        foodPanel.add(foodTitle);
 
-//         // Slogan di atas gambar
-//         JLabel sloganLabel = new JLabel(
-//                 "<html><div style='text-align: left;'><b>Bagikan surplus makananmu<br>untuk membantu panti asuhan yang membutuhkan.</b></div></html>");
-//         sloganLabel.setBounds(20, 150, 1440, 100); // Posisi dan ukuran slogan
-//         sloganLabel.setFont(new Font("Poppins", Font.BOLD, 24));
-//         sloganLabel.setForeground(Color.WHITE);
-//         sloganLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        // Tombol "Tambah Donasi"
+        JButton tambahDonasiButton = new JButton("Tambah Donasi");
+        tambahDonasiButton.setBounds(1130, 20, 180, 40);
+        tambahDonasiButton.setBackground(new Color(55, 156, 199));
+        tambahDonasiButton.setForeground(Color.WHITE);
+        tambahDonasiButton.setFont(new Font("Arial", Font.BOLD, 14));
+        tambahDonasiButton.setBorderPainted(false); // Tidak ada border pada tombol
+        foodPanel.add(tambahDonasiButton);
 
-//         bannerPanel.add(sloganLabel);
-//         frame.add(bannerPanel);
+        // Panel untuk kartu makanan (menggunakan ScrollPane)
+        JScrollPane foodScrollPane = new JScrollPane();
+        foodScrollPane.setBorder(BorderFactory.createEmptyBorder());
+        foodScrollPane.setBounds(10, 60, 1400, 300);
+        foodScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        foodScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
 
-//         // Panel Daftar Makanan
-//         JPanel foodPanel = new JPanel();
-//         foodPanel.setBounds(0, 380, 1440, 400);
-//         foodPanel.setLayout(null);
+        JPanel foodCardPanel = new JPanel();
+        foodCardPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
+        foodCardPanel.setBorder(BorderFactory.createEmptyBorder());
 
-//         // Judul Daftar Makanan
-//         JLabel foodTitle = new JLabel("Daftar Makanan");
-//         foodTitle.setBounds(20, 20, 400, 40);
-//         foodTitle.setFont(new Font("Arial", Font.BOLD, 24));
-//         foodPanel.add(foodTitle);
+        // Mengambil data makanan dari database
+        FoodConnection foodConnection = new FoodConnection();
+        List<String[]> foodDataList = foodConnection.getFoods(userId); // Gantilah 1 dengan userId yang sesuai
 
-//         // Tombol "Tambah Donasi"
-//         JButton tambahDonasiButton = new JButton("Tambah Donasi");
-//         tambahDonasiButton.setBounds(1130, 20, 180, 40);
-//         tambahDonasiButton.setBackground(new Color(55, 156, 199));
-//         tambahDonasiButton.setForeground(Color.WHITE);
-//         tambahDonasiButton.setFont(new Font("Arial", Font.BOLD, 14));
-//         tambahDonasiButton.setBorderPainted(false); // Tidak ada border pada tombol
-//         foodPanel.add(tambahDonasiButton);
+        // Membuat kartu makanan berdasarkan data yang diambil dari database
+        for (String[] foodData : foodDataList) {
+            if (foodData.length < 4)
+                continue; // Lewati jika data tidak lengkap
 
-//         // Panel untuk kartu makanan (menggunakan ScrollPane)
-//         JScrollPane foodScrollPane = new JScrollPane();
-//         foodScrollPane.setBorder(BorderFactory.createEmptyBorder());
-//         foodScrollPane.setBounds(10, 60, 1400, 300);
-//         foodScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//         foodScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+            // Ambil data dari foodList
+            int idMakanan = Integer.parseInt(foodData[0]);
+            String nama = foodData[1];
+            String porsi = foodData[2];
+            String photoPath = foodData[3];
 
-//         JPanel foodCardPanel = new JPanel();
-//         foodCardPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 20));
-//         foodCardPanel.setBorder(BorderFactory.createEmptyBorder());
+            JPanel card = new JPanel();
+            card.setPreferredSize(new Dimension(200, 230));
+            card.setLayout(null);
+            card.setBackground(Color.WHITE);
+            card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
 
-//         // Mengambil data makanan dari database
-//         FoodConnection foodConnection = new FoodConnection();
-//         List<String[]> foodDataList = foodConnection.getFoods(userId); // Gantilah 1 dengan userId yang sesuai
+            // Foto makanan
+            JLabel foodImage = new JLabel();
+            foodImage.setBounds(10, 10, 180, 120);
+            foodImage.setIcon(new ImageIcon(
+                    new ImageIcon(photoPath).getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH)));
+            card.add(foodImage);
 
-//         // Membuat kartu makanan berdasarkan data yang diambil dari database
-//         for (String[] foodData : foodDataList) {
-//             Makanan makanan = new Makanan(foodData[0], foodData[1], foodData[2]);
-//             JPanel card = new JPanel();
-//             card.setPreferredSize(new Dimension(200, 230));
-//             card.setLayout(null);
-//             card.setBackground(Color.WHITE);
-//             card.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+            // Tombol Req (disabled)
+            JButton reqButton = new JButton("Req");
+            reqButton.setBounds(10, 140, 180, 30);
+            reqButton.setEnabled(false);
+            reqButton.setBackground(Color.LIGHT_GRAY);
+            reqButton.setForeground(Color.WHITE);
+            reqButton.setFont(new Font("Arial", Font.BOLD, 14));
+            reqButton.setBorderPainted(false);
+            card.add(reqButton);
 
-//             // Foto makanan
-//             JLabel foodImage = new JLabel();
-//             foodImage.setBounds(10, 10, 180, 120);
-//             foodImage.setIcon(new ImageIcon(
-//                     new ImageIcon(makanan.getImagePath()).getImage().getScaledInstance(180, 120, Image.SCALE_SMOOTH)));
-//             card.add(foodImage);
+            // Label nama makanan
+            JLabel foodName = new JLabel(nama, SwingConstants.CENTER);
+            foodName.setBounds(10, 180, 180, 20);
+            foodName.setFont(new Font("Arial", Font.PLAIN, 16));
+            foodName.setHorizontalAlignment(SwingConstants.LEFT);
+            card.add(foodName);
 
-//             // Tombol Req (disabled)
-//             JButton reqButton = new JButton("Req");
-//             reqButton.setBounds(10, 140, 180, 30);
-//             reqButton.setEnabled(false);
-//             reqButton.setBackground(Color.LIGHT_GRAY);
-//             reqButton.setForeground(Color.WHITE);
-//             reqButton.setFont(new Font("Arial", Font.BOLD, 14));
-//             reqButton.setBorderPainted(false);
-//             card.add(reqButton);
+            // Label porsi
+            JLabel foodPortion = new JLabel("Porsi: " + porsi, SwingConstants.CENTER);
+            foodPortion.setBounds(10, 210, 180, 20);
+            foodPortion.setFont(new Font("Arial", Font.PLAIN, 14));
+            foodPortion.setHorizontalAlignment(SwingConstants.LEFT);
+            card.add(foodPortion);
 
-//             // Label nama makanan
-//             JLabel foodName = new JLabel(makanan.getNama());
-//             foodName.setBounds(10, 180, 180, 20);
-//             foodName.setFont(new Font("Arial", Font.PLAIN, 16));
-//             foodName.setHorizontalAlignment(SwingConstants.LEFT);
-//             card.add(foodName);
+            card.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    try {
+                        int idMakanan = Integer.parseInt(foodData[0]);
+                        DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
+                        detailFrame.setVisible(true);
 
-//             // Label porsi
-//             JLabel foodPortion = new JLabel("Porsi: " + makanan.getPorsi());
-//             foodPortion.setBounds(10, 210, 180, 20);
-//             foodPortion.setFont(new Font("Arial", Font.PLAIN, 14));
-//             foodPortion.setHorizontalAlignment(SwingConstants.LEFT);
-//             card.add(foodPortion);
+                        detailFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+                            @Override
+                            public void windowClosing(java.awt.event.WindowEvent e) {
+                                frame.setVisible(true);
+                            }
+                        });
+                    } catch (NumberFormatException e) {
+                        String namaMakanan = foodData[1];
+                        int idMakanan = cariIdMakanan(namaMakanan);
 
-//             card.addMouseListener(new java.awt.event.MouseAdapter() {
-//                 public void mouseClicked(java.awt.event.MouseEvent evt) {
-//                     try {
-//                         int idMakanan = Integer.parseInt(foodData[0]); 
-//                         DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
-//                         detailFrame.setVisible(true);
+                        if (idMakanan != 0) {
+                            DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
+                            detailFrame.setVisible(true);
+                        } else {
+                            JOptionPane.showMessageDialog(frame, "Makanan tidak ditemukan!", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                }
+            });
 
-//                         detailFrame.addWindowListener(new java.awt.event.WindowAdapter() {
-//                             @Override
-//                             public void windowClosing(java.awt.event.WindowEvent e) {
-//                                 frame.setVisible(true); 
-//                             }
-//                         });
-//                     } catch (NumberFormatException e) {
-//                         String namaMakanan = foodData[1]; 
-//                         int idMakanan = cariIdMakanan(namaMakanan);
+            foodCardPanel.add(card);
+        }
 
-//                         if (idMakanan != 0) {
-//                             DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
-//                             detailFrame.setVisible(true);
-//                         } else {
-//                             JOptionPane.showMessageDialog(frame, "Makanan tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
-//                         }
-//                     }
-//                 }
-//             });
+        foodScrollPane.setViewportView(foodCardPanel);
+        foodPanel.add(foodScrollPane);
 
-//             foodCardPanel.add(card);
-//         }
+        frame.add(foodPanel);
 
-//         foodScrollPane.setViewportView(foodCardPanel);
-//         foodPanel.add(foodScrollPane);
+        // Menampilkan JFrame
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setVisible(true);
+    }
 
-//         frame.add(foodPanel);
+    // Fungsi untuk membuat tombol transparan
+    private static JButton createTransparentButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(false);
+        button.setForeground(Color.WHITE);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
+    }
 
-//         // Menampilkan JFrame
-//         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-//         frame.setVisible(true);
-//     }
+    private int cariIdMakanan(String namaMakanan) {
+        int id = 0;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT id_makanan FROM makanan WHERE nama = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setString(1, namaMakanan);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                id = rs.getInt("id_makanan");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return id;
+    }
 
-//     // Fungsi untuk membuat tombol transparan
-//     private static JButton createTransparentButton(String text) {
-//         JButton button = new JButton(text);
-//         button.setFont(new Font("Arial", Font.PLAIN, 16));
-//         button.setFocusPainted(false);
-//         button.setBorder(BorderFactory.createEmptyBorder());
-//         button.setContentAreaFilled(false);
-//         button.setForeground(Color.WHITE);
-//         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-//         return button;
-//     }
-
-//      private int cariIdMakanan(String namaMakanan) {
-//         int id = 0;
-//         try (Connection conn = DatabaseConnection.getConnection()) {
-//             String query = "SELECT id_makanan FROM makanan WHERE nama = ?";
-//             PreparedStatement stmt = conn.prepareStatement(query);
-//             stmt.setString(1, namaMakanan);
-//             ResultSet rs = stmt.executeQuery();
-//             if (rs.next()) {
-//                 id = rs.getInt("id_makanan");
-//             }
-//         } catch (SQLException e) {
-//             e.printStackTrace();
-//         }
-//         return id;
-//     }
-//     public static void main(String[] args) {
-//         // Contoh penggunaannya, ganti userId dengan ID pengguna yang sesuai
-//         new BerandaDonatur(1);
-//     }
-// }
+    public static void main(String[] args) {
+        // Contoh penggunaannya, ganti userId dengan ID pengguna yang sesuai
+        new BerandaPanti(1);
+    }
+}

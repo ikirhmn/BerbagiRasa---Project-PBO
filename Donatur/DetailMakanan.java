@@ -11,9 +11,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import src.DatabaseConnection;
+import src.FoodRequestConnection;
 
 public class DetailMakanan extends JDialog {
     private int id_makanan;
+    private int userId;
 
     public DetailMakanan(JFrame parent, int id_makanan) {
         this.id_makanan = id_makanan;
@@ -150,29 +152,23 @@ public class DetailMakanan extends JDialog {
         btnACC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try (Connection conn = DatabaseConnection.getConnection()) {
-                    String updateQuery = "UPDATE Makanan SET status = 'ACC' WHERE id_makanan = ?";
-                    PreparedStatement stmt = conn.prepareStatement(updateQuery);
-                    stmt.setInt(1, id_makanan);
+                // Memproses ACC dan memperbarui status permintaan
+                FoodRequestConnection requestConnection = new FoodRequestConnection();
+                boolean success = requestConnection.updateRequestStatus(id_makanan);
 
-                    int rowsUpdated = stmt.executeUpdate();
-                    if (rowsUpdated > 0) {
-                        lblStatusValue.setText("ACC");
-                        btnACC.setEnabled(false);
-                        JOptionPane.showMessageDialog(DetailMakanan.this, "Status berhasil diperbarui.", "Sukses",
-                                JOptionPane.INFORMATION_MESSAGE);
-                    } else {
-                        JOptionPane.showMessageDialog(DetailMakanan.this, "Tidak ada data yang diperbarui.",
-                                "Informasi", JOptionPane.WARNING_MESSAGE);
-                    }
-                } catch (SQLException ex) {
-                    ex.printStackTrace();
-                    JOptionPane.showMessageDialog(DetailMakanan.this, "Terjadi kesalahan saat memperbarui status.",
-                            "Error", JOptionPane.ERROR_MESSAGE);
+                if (success) {
+                    // Jika update status berhasil, beri tahu RiwayatDonatur untuk memperbarui data
+                    JOptionPane.showMessageDialog(null, "Makanan berhasil di-ACC!");
+                    dispose();  // Menutup frame DetailMakanan setelah ACC berhasil
+
+                    // Panggil RiwayatDonatur untuk memperbarui data
+                    new RiwayatDonatur(userId);  // Membuka kembali RiwayatDonatur dengan data yang terupdate
+                } else {
+                    // Tampilkan pesan jika update gagal
+                    JOptionPane.showMessageDialog(null, "Gagal melakukan ACC.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
-
         setVisible(true);
     }
 }

@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import src.DatabaseConnection;
 
@@ -23,19 +25,81 @@ public class Donasi {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(null);
 
-        // Header Panel
+        // Membuat HeaderPanel
         JPanel headerPanel = new JPanel();
         headerPanel.setBounds(0, 0, 1440, 80);
         headerPanel.setBackground(new Color(82, 170, 94));
         headerPanel.setLayout(null);
 
+        // Menambahkan Label Aplikasi
         JLabel appName = new JLabel("BerbagiRasa");
         appName.setBounds(20, 20, 300, 40);
         appName.setFont(new Font("Poppins", Font.BOLD, 34));
         appName.setForeground(Color.WHITE);
         headerPanel.add(appName);
 
+        // Tombol Navigasi
+        JButton berandaButton = createTransparentButton("Beranda");
+        berandaButton.setBounds(320, 20, 100, 40);
+        berandaButton.setFont(new Font("Poppins", Font.PLAIN, 16));
+        headerPanel.add(berandaButton);
+
+        JButton donasiButton = createTransparentButton("Donasi");
+        donasiButton.setBounds(440, 20, 100, 40);
+        donasiButton.setFont(new Font("Poppins", Font.BOLD, 16));
+        headerPanel.add(donasiButton);
+
+        JButton riwayatButton = createTransparentButton("Riwayat");
+        riwayatButton.setBounds(560, 20, 100, 40);
+        riwayatButton.setFont(new Font("Poppins", Font.PLAIN, 16));
+        headerPanel.add(riwayatButton);
+
+        // Tombol Profil
+        JButton profileButton = new JButton();
+        profileButton.setBounds(1250, 10, 60, 60);
+        profileButton.setFocusPainted(false);
+        profileButton.setBorder(BorderFactory.createEmptyBorder());
+        profileButton.setContentAreaFilled(false);
+        profileButton.setOpaque(true);
+        profileButton.setBackground(Color.WHITE);
+        profileButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        profileButton.setFont(new Font("Poppins", Font.BOLD, 20));
+        profileButton.setText("P");
+        profileButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+        headerPanel.add(profileButton);
+
+        // Button Riwayat
+        riwayatButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka Frame Riwayat
+                new RiwayatDonatur(userId);
+                frame.dispose(); // Menutup JFrame utama jika diperlukan
+            }
+        });
+
+        // Button Donasi
+        berandaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka Frame Donasi
+                new BerandaDonatur(userId);
+                frame.dispose(); // Menutup JFrame utama jika diperlukan
+            }
+        });
+
+        // Button Profile
+        profileButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka Frame Profile
+                new ProfileDonatur(userId);
+                frame.dispose(); // Menutup JFrame utama jika diperlukan
+            }
+        });
+
         frame.add(headerPanel);
+        ;
 
         // Panel Konten Donasi
         JPanel donasiPanel = new JPanel();
@@ -93,7 +157,7 @@ public class Donasi {
         filePathLabel.setBounds(430, 230, 400, 30);
         donasiPanel.add(filePathLabel);
 
-        final File[] selectedFile = {null};
+        final File[] selectedFile = { null };
         pilihGambarButton.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             FileNameExtensionFilter filter = new FileNameExtensionFilter("Gambar", "jpg", "jpeg", "png");
@@ -138,16 +202,30 @@ public class Donasi {
                 stmt.setInt(5, userId);
 
                 stmt.executeUpdate();
-                JOptionPane.showMessageDialog(frame, "Donasi berhasil disimpan!", "Sukses", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Donasi berhasil disimpan!", "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
                 new BerandaDonatur(userId);
             } catch (SQLException ex) {
                 ex.printStackTrace();
-                JOptionPane.showMessageDialog(frame, "Terjadi kesalahan dalam penyimpanan.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(frame, "Terjadi kesalahan dalam penyimpanan.", "Error",
+                        JOptionPane.ERROR_MESSAGE);
             }
         });
 
         frame.add(donasiPanel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
+    }
+
+    // Fungsi untuk membuat tombol transparan
+    private static JButton createTransparentButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(new Font("Arial", Font.PLAIN, 16));
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(false);
+        button.setForeground(Color.WHITE);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
     }
 }

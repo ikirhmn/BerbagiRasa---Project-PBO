@@ -31,12 +31,11 @@ public class FoodConnection {
                 System.out.println("Data makanan: " + idMakanan + ", " + nama + ", " + porsi + ", " + photoPath);
 
                 foodList.add(new String[]{idMakanan, nama, porsi, photoPath});
-
-                }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
-        return foodList;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return foodList;
+}
 }

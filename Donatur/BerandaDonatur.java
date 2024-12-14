@@ -30,24 +30,30 @@ public class BerandaDonatur {
         headerPanel.setBackground(new Color(82, 170, 94));
         headerPanel.setLayout(null);
 
+        // Menambahkan Label Aplikasi
         JLabel appName = new JLabel("BerbagiRasa");
         appName.setBounds(20, 20, 300, 40);
         appName.setFont(new Font("Poppins", Font.BOLD, 34));
         appName.setForeground(Color.WHITE);
         headerPanel.add(appName);
 
+        // Tombol Navigasi
         JButton berandaButton = createTransparentButton("Beranda");
-        berandaButton.setBounds(300, 20, 100, 40);
+        berandaButton.setBounds(320, 20, 100, 40);
+        berandaButton.setFont(new Font("Poppins", Font.BOLD, 16));
         headerPanel.add(berandaButton);
 
         JButton donasiButton = createTransparentButton("Donasi");
-        donasiButton.setBounds(420, 20, 100, 40);
+        donasiButton.setBounds(440, 20, 100, 40);
+        donasiButton.setFont(new Font("Poppins", Font.PLAIN, 16));
         headerPanel.add(donasiButton);
 
         JButton riwayatButton = createTransparentButton("Riwayat");
-        riwayatButton.setBounds(540, 20, 100, 40);
+        riwayatButton.setBounds(560, 20, 100, 40);
+        riwayatButton.setFont(new Font("Poppins", Font.PLAIN, 16));
         headerPanel.add(riwayatButton);
 
+        // Tombol Profil
         JButton profileButton = new JButton();
         profileButton.setBounds(1250, 10, 60, 60);
         profileButton.setFocusPainted(false);
@@ -154,7 +160,8 @@ public class BerandaDonatur {
 
         // Membuat kartu makanan berdasarkan data yang diambil dari database
         for (String[] foodData : foodDataList) {
-            if (foodData.length < 4) continue; // Lewati jika data tidak lengkap
+            if (foodData.length < 4)
+                continue; // Lewati jika data tidak lengkap
 
             // Ambil data dari foodList
             int idMakanan = Integer.parseInt(foodData[0]);
@@ -202,25 +209,26 @@ public class BerandaDonatur {
             card.addMouseListener(new java.awt.event.MouseAdapter() {
                 public void mouseClicked(java.awt.event.MouseEvent evt) {
                     try {
-                        int idMakanan = Integer.parseInt(foodData[0]); 
+                        int idMakanan = Integer.parseInt(foodData[0]);
                         DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
                         detailFrame.setVisible(true);
 
                         detailFrame.addWindowListener(new java.awt.event.WindowAdapter() {
                             @Override
                             public void windowClosing(java.awt.event.WindowEvent e) {
-                                frame.setVisible(true); 
+                                frame.setVisible(true);
                             }
                         });
                     } catch (NumberFormatException e) {
-                        String namaMakanan = foodData[1]; 
+                        String namaMakanan = foodData[1];
                         int idMakanan = cariIdMakanan(namaMakanan);
 
                         if (idMakanan != 0) {
                             DetailMakanan detailFrame = new DetailMakanan(frame, idMakanan);
                             detailFrame.setVisible(true);
                         } else {
-                            JOptionPane.showMessageDialog(frame, "Makanan tidak ditemukan!", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(frame, "Makanan tidak ditemukan!", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
                     }
                 }
@@ -251,7 +259,7 @@ public class BerandaDonatur {
         return button;
     }
 
-     private int cariIdMakanan(String namaMakanan) {
+    private int cariIdMakanan(String namaMakanan) {
         int id = 0;
         try (Connection conn = DatabaseConnection.getConnection()) {
             String query = "SELECT id_makanan FROM makanan WHERE nama = ?";
@@ -266,7 +274,7 @@ public class BerandaDonatur {
         }
         return id;
     }
-    
+
     public static void main(String[] args) {
         // Contoh penggunaannya, ganti userId dengan ID pengguna yang sesuai
         new BerandaDonatur(1);
