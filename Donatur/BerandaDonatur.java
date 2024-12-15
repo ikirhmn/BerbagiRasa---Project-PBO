@@ -10,6 +10,7 @@ import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -185,6 +186,11 @@ public class BerandaDonatur {
             // Tombol Req (disabled)
             JButton reqButton = new JButton("Req");
             reqButton.setBounds(10, 140, 180, 30);
+            reqButton.setVisible(false); // Tombol tidak muncul
+            boolean isRequested = checkRequestStatus(idMakanan); // Ganti dengan logika yang sesuai untuk cek permintaan
+            if (isRequested) {
+                reqButton.setVisible(true); // Tombol hanya muncul jika makanan sudah diminta
+            }
             reqButton.setEnabled(false);
             reqButton.setBackground(Color.LIGHT_GRAY);
             reqButton.setForeground(Color.WHITE);
@@ -273,6 +279,49 @@ public class BerandaDonatur {
             e.printStackTrace();
         }
         return id;
+    }
+
+    private boolean isMakananRequested(int idMakanan) {
+        boolean requested = false;
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT * FROM permintaan WHERE id_makanan = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, idMakanan);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                requested = true; // Makanan sudah diminta
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return requested;
+    }
+
+    public boolean checkRequestStatus(int idMakanan) {
+        boolean isRequested = false;
+
+        // Koneksi ke database
+        String query = "SELECT * FROM permintaan WHERE id_makanan = ?";
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_berbagi_rasa", "root",
+                "");
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            // Set parameter id_makanan
+            stmt.setInt(1, idMakanan);
+
+            // Eksekusi query
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    // Jika hasil query ditemukan, berarti makanan sudah diminta
+                    isRequested = true;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return isRequested;
     }
 
     public static void main(String[] args) {

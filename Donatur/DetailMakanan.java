@@ -95,9 +95,10 @@ public class DetailMakanan extends JDialog {
             }
 
             String query = """
-                    SELECT id_makanan, nama, porsi, photo_path, waktu_ketersediaan, status, p.nama_panti, p.alamat_panti
+                    SELECT m.id_makanan, m.nama, m.porsi, m.photo_path, m.waktu_ketersediaan, m.status, p.nama_panti, p.alamat_panti
                     FROM makanan m
-                    LEFT JOIN panti p ON m.id_panti = p.id_panti
+                    LEFT JOIN permintaan pm ON m.id_makanan = pm.id_makanan
+                    LEFT JOIN panti p ON pm.id_panti = p.id_panti
                     WHERE m.id_makanan = ?
                            """;
 
