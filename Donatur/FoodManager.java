@@ -51,10 +51,4 @@ public class FoodManager {
             }
         }
     }
-
-
-    public static Makanan getFoodById(int idPermintaan) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getFoodById'");
-    }
 }

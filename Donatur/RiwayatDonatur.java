@@ -1,15 +1,22 @@
 package Donatur;
 
 import javax.swing.*;
+
+import src.DatabaseConnection;
+
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class RiwayatDonatur {
         private int userId;
-        private JFrame frame;
-        private JPanel mainPanel;
 
         public RiwayatDonatur(int userId) {
                 this.userId = userId;
@@ -74,12 +81,12 @@ public class RiwayatDonatur {
                 berandaButton.addActionListener(new ActionListener() {
                         @Override
                         public void actionPerformed(ActionEvent e) {
-                                // Membuka Frame Riwayat
-                                new BerandaDonatur(userId);
-                                frame.dispose(); // Menutup JFrame utama jika diperlukan
+                            // Membuka Frame Donasi
+                            new BerandaDonatur(userId);
+                            frame.dispose(); // Menutup JFrame utama jika diperlukan
                         }
-                });
-
+                    });
+                    
                 // Button Donasi
                 donasiButton.addActionListener(new ActionListener() {
                         @Override
@@ -101,22 +108,23 @@ public class RiwayatDonatur {
                 });
 
                 // Panel Utama
-                JPanel mainPanel = new JPanel();
-                mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS)); // Gunakan BoxLayout untuk panel yang
-                                                                                 // scrollable
-                mainPanel.setBackground(new Color(245, 245, 245));
+                JPanel contentPanel = new JPanel();
+                contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS)); // Gunakan BoxLayout untuk panel
+                                                                                       // yang
+                                                                                       // scrollable
+                contentPanel.setBackground(new Color(245, 245, 245));
 
                 // Label Riwayat
                 JLabel riwayatLabel = new JLabel("Riwayat");
                 riwayatLabel.setFont(new Font("Poppins", Font.BOLD, 24));
                 riwayatLabel.setAlignmentX(Component.LEFT_ALIGNMENT); // Pastikan label rata kiri
-                mainPanel.add(riwayatLabel);
+                contentPanel.add(riwayatLabel);
 
                 // Memuat dan Menampilkan Data Makanan yang Sudah di-ACC
-                refreshData();
+                refreshData(contentPanel);
 
-                // Membungkus mainPanel dalam JScrollPane
-                JScrollPane scrollPane = new JScrollPane(mainPanel);
+                // Membungkus contentPanel dalam JScrollPane
+                JScrollPane scrollPane = new JScrollPane(contentPanel);
                 scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
                 scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 
@@ -129,36 +137,65 @@ public class RiwayatDonatur {
                 frame.setVisible(true);
         }
 
-        // Method untuk memuat dan menampilkan data yang sudah di-ACC
-        public void refreshData() {
-                // Ambil daftar makanan yang sudah di-ACC
-                ArrayList<String[]> dataList = FoodManager.getApprovedFoodList(userId);
+        public void refreshData(JPanel contentPanel) {
+                contentPanel.removeAll();
 
-                // Menghapus data lama yang ada di panel utama
-                mainPanel.removeAll();
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                        if (conn != null) {
+                                String query = """
+                                                SELECT
+                                                    m.nama,
+                                                    p.nama_panti,
+                                                    m.porsi,
+                                                    m.photo_path,
+                                                    permintaan.tanggal_acc
+                                                FROM
+                                                    permintaan
+                                                JOIN
+                                                    makanan m ON permintaan.id_makanan = m.id_makanan
+                                                JOIN
+                                                    panti p ON permintaan.id_panti = p.id_panti
+                                                WHERE
+                                                    permintaan.status = 'ACC' AND m.status = 'ACC'
+                                                ORDER BY permintaan.tanggal_acc DESC
+                                                """;
 
-                // Menambahkan data makanan yang sudah di-ACC
-                if (dataList.isEmpty()) {
-                        JLabel noDataLabel = new JLabel("Belum ada riwayat donasi.");
-                        noDataLabel.setFont(new Font("Poppins", Font.PLAIN, 18));
-                        noDataLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-                        mainPanel.add(noDataLabel);
-                } else {
-                        for (String[] data : dataList) {
-                                JPanel card = createCard(data[0], data[1], data[2], data[3], data[4]);
-                                card.setAlignmentX(Component.LEFT_ALIGNMENT);
-                                mainPanel.add(card);
-                                mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+                                PreparedStatement stmt = conn.prepareStatement(query);
+                                ResultSet rs = stmt.executeQuery();
+
+                                boolean dataFound = false;
+
+                                while (rs.next()) {
+                                        dataFound = true;
+                                        String namaMakanan = rs.getString("nama");
+                                        String namaPanti = rs.getString("nama_panti");
+                                        String jumlahPorsi = rs.getString("porsi");
+                                        String imagePath = rs.getString("photo_path");
+                                        String tanggalACC = rs.getString("tanggal_acc");
+
+                                        JPanel card = createCard(imagePath, namaMakanan, tanggalACC, namaPanti,
+                                                        jumlahPorsi);
+                                        contentPanel.add(card);
+                                        contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+                                }
+
+                                if (!dataFound) {
+                                        JLabel noDataLabel = new JLabel("Belum ada riwayat donasi.");
+                                        noDataLabel.setFont(new Font("Poppins", Font.PLAIN, 18));
+                                        noDataLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                                        contentPanel.add(noDataLabel);
+                                }
                         }
+                } catch (SQLException ex) {
+                        ex.printStackTrace();
                 }
 
-                // Menyegarkan tampilan panel
-                mainPanel.revalidate();
-                mainPanel.repaint();
+                contentPanel.revalidate();
+                contentPanel.repaint();
         }
 
         // Fungsi untuk membuat card
-        private static JPanel createCard(String imagePath, String namaMakanan, String tanggal, String namaPanti,
+        private static JPanel createCard(String imagePath, String namaMakanan, String tanggalACC, String namaPanti,
                         String jumlahPorsi) {
                 JPanel card = new JPanel();
                 card.setLayout(new BorderLayout(10, 10));
@@ -166,13 +203,22 @@ public class RiwayatDonatur {
                 card.setBorder(BorderFactory.createCompoundBorder(
                                 BorderFactory.createLineBorder(new Color(200, 200, 200), 1, true),
                                 BorderFactory.createEmptyBorder(10, 10, 10, 10)));
-                card.setPreferredSize(new Dimension(800, 180)); // Ukuran kartu tetap proporsional
+                card.setPreferredSize(new Dimension(1300, 200)); // Ukuran kartu tetap proporsional
+                card.setMaximumSize(new Dimension(1300, 200));
 
-                // Gambar
                 JLabel imageLabel = new JLabel();
-                imageLabel.setIcon(new ImageIcon(
-                                new ImageIcon(imagePath).getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
-                imageLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+                if (imagePath != null && !imagePath.isEmpty()) {
+                        File imageFile = new File(imagePath);
+                        if (imageFile.exists()) {
+                                ImageIcon icon = new ImageIcon(new ImageIcon(imagePath).getImage()
+                                                .getScaledInstance(200, 200, Image.SCALE_SMOOTH));
+                                imageLabel.setIcon(icon);
+                        } else {
+                                imageLabel.setText("Gambar tidak ditemukan");
+                        }
+                } else {
+                        imageLabel.setText("No Image");
+                }
 
                 // Informasi
                 JPanel infoPanel = new JPanel();
@@ -182,7 +228,7 @@ public class RiwayatDonatur {
                 JLabel namaLabel = new JLabel("<html><b>" + namaMakanan + "</b></html>");
                 namaLabel.setFont(new Font("Poppins", Font.BOLD, 24));
 
-                JLabel tanggalLabel = new JLabel("Tanggal: " + tanggal);
+                JLabel tanggalLabel = new JLabel("Tanggal ACC: " + tanggalACC);
                 tanggalLabel.setFont(new Font("Poppins", Font.PLAIN, 14));
 
                 JLabel pantiLabel = new JLabel("Panti Asuhan: " + namaPanti);
@@ -225,10 +271,5 @@ public class RiwayatDonatur {
                 button.setForeground(Color.WHITE);
                 button.setCursor(new Cursor(Cursor.HAND_CURSOR));
                 return button;
-        }
-
-        // Fungsi untuk menampilkan frame Riwayat
-        public static void main(String[] args) {
-                new RiwayatDonatur(1);
         }
 }

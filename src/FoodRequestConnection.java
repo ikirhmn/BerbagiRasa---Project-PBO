@@ -1,6 +1,7 @@
 package src;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +14,7 @@ public class FoodRequestConnection {
         String query = "INSERT INTO Permintaan (id_panti, id_makanan, tanggal_permintaan, status) VALUES (?, ?, NOW(), 'Belum ACC')";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, idPanti);
             stmt.setInt(2, idMakanan);
@@ -29,12 +30,12 @@ public class FoodRequestConnection {
     public List<String[]> getRequestsByPanti(int idPanti) {
         List<String[]> requestList = new ArrayList<>();
         String query = "SELECT perm.id_permintaan, m.nama AS nama_makanan, m.porsi, perm.status, perm.tanggal_permintaan "
-                     + "FROM Permintaan perm "
-                     + "JOIN Makanan m ON perm.id_makanan = m.id_makanan "
-                     + "WHERE perm.id_panti = ?";
+                + "FROM Permintaan perm "
+                + "JOIN Makanan m ON perm.id_makanan = m.id_makanan "
+                + "WHERE perm.id_panti = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, idPanti);
 
@@ -46,7 +47,7 @@ public class FoodRequestConnection {
                     String status = rs.getString("status");
                     String tanggalPermintaan = rs.getString("tanggal_permintaan");
 
-                    requestList.add(new String[]{idPermintaan, namaMakanan, porsi, status, tanggalPermintaan});
+                    requestList.add(new String[] { idPermintaan, namaMakanan, porsi, status, tanggalPermintaan });
                 }
             }
         } catch (SQLException e) {
@@ -58,28 +59,28 @@ public class FoodRequestConnection {
     public boolean updateRequestStatus(int id_makanan) {
         String query = "UPDATE makanan SET status = 'ACC' WHERE id_makanan = ?";
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, id_makanan);
             int rowsUpdated = stmt.executeUpdate();
 
-            return rowsUpdated > 0;  // Jika ada baris yang diupdate, return true
+            return rowsUpdated > 0; // Jika ada baris yang diupdate, return true
         } catch (SQLException e) {
             e.printStackTrace();
-            return false;  // Jika terjadi kesalahan, return false
+            return false; // Jika terjadi kesalahan, return false
         }
     }
 
-      // Method untuk mendapatkan permintaan yang telah di-ACC
+    // Method untuk mendapatkan permintaan yang telah di-ACC
     public ArrayList<String[]> getApprovedFoodList(int idPanti) {
         ArrayList<String[]> approvedFoodList = new ArrayList<>();
         String query = "SELECT perm.id_permintaan, m.nama AS nama_makanan, m.porsi, perm.status, perm.tanggal_permintaan "
-                     + "FROM permintaan perm "
-                     + "JOIN makanan m ON perm.id_makanan = m.id_makanan "
-                     + "WHERE perm.id_panti = ? AND perm.status = 'ACC'";
+                + "FROM permintaan perm "
+                + "JOIN makanan m ON perm.id_makanan = m.id_makanan "
+                + "WHERE perm.id_panti = ? AND perm.status = 'ACC'";
 
         try (Connection conn = DatabaseConnection.getConnection();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setInt(1, idPanti);
 
@@ -91,7 +92,7 @@ public class FoodRequestConnection {
                     String status = rs.getString("status");
                     String tanggalPermintaan = rs.getString("tanggal_permintaan");
 
-                    approvedFoodList.add(new String[]{idPermintaan, namaMakanan, porsi, status, tanggalPermintaan});
+                    approvedFoodList.add(new String[] { idPermintaan, namaMakanan, porsi, status, tanggalPermintaan });
                 }
             }
         } catch (SQLException e) {
@@ -100,3 +101,35 @@ public class FoodRequestConnection {
         return approvedFoodList;
     }
 }
+    // public static void accMakanan(int idMakanan, int idPanti) {
+    //     // Query untuk memasukkan data ke permintaan
+    //     String insertQuery = "INSERT INTO permintaan (id_panti, id_makanan, tanggal_permintaan, status) "
+    //             + "SELECT ?, ?, NOW(), 'ACC' FROM makanan WHERE id_makanan = ? AND status = 'Belum ACC'";
+
+    //     // Query untuk memperbarui status makanan
+    //     String updateQuery = "UPDATE makanan SET status = 'ACC' WHERE id_makanan = ?";
+
+    //     try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_berbagi_rasa", "root", "");
+    //             PreparedStatement insertStmt = conn.prepareStatement(insertQuery);
+    //             PreparedStatement updateStmt = conn.prepareStatement(updateQuery)) {
+
+    //         // Set parameter untuk insert query
+    //         insertStmt.setInt(1, idPanti);
+    //         insertStmt.setInt(2, idMakanan);
+    //         insertStmt.setInt(3, idMakanan);
+
+    //         // Eksekusi insert
+    //         int rowsInserted = insertStmt.executeUpdate();
+
+    //         if (rowsInserted > 0) {
+    //             // Jika data berhasil dimasukkan ke permintaan, lanjutkan dengan update status
+    //             // makanan
+    //             updateStmt.setInt(1, idMakanan);
+    //             updateStmt.executeUpdate();
+    //         }
+
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     }
+    // }
+

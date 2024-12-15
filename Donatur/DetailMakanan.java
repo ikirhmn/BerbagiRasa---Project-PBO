@@ -148,27 +148,46 @@ public class DetailMakanan extends JDialog {
             return;
         }
 
-        // Event listener tombol ACC
         btnACC.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Memproses ACC dan memperbarui status permintaan
-                FoodRequestConnection requestConnection = new FoodRequestConnection();
-                boolean success = requestConnection.updateRequestStatus(id_makanan);
+                try (Connection conn = DatabaseConnection.getConnection()) {
+                    if (conn != null) {
+                        conn.setAutoCommit(false);
 
-                if (success) {
-                    // Jika update status berhasil, beri tahu RiwayatDonatur untuk memperbarui data
-                    JOptionPane.showMessageDialog(null, "Makanan berhasil di-ACC!");
-                    dispose();  // Menutup frame DetailMakanan setelah ACC berhasil
+                        // Update status menjadi 'ACC'
+                        String updateQuery = "UPDATE makanan SET status = 'ACC' WHERE id_makanan = ?";
+                        PreparedStatement stmtUpdate = conn.prepareStatement(updateQuery);
+                        stmtUpdate.setInt(1, id_makanan);
+                        stmtUpdate.executeUpdate();
 
-                    // Panggil RiwayatDonatur untuk memperbarui data
-                    new RiwayatDonatur(userId);  // Membuka kembali RiwayatDonatur dengan data yang terupdate
-                } else {
-                    // Tampilkan pesan jika update gagal
-                    JOptionPane.showMessageDialog(null, "Gagal melakukan ACC.", "Error", JOptionPane.ERROR_MESSAGE);
+                        // Insert data ke tabel permintaan
+                        String insertQuery = """
+                                INSERT INTO permintaan (id_panti, id_makanan, tanggal_permintaan, status, tanggal_acc)
+                                SELECT id_panti, id_makanan, CURRENT_TIMESTAMP(), 'ACC', CURRENT_TIMESTAMP()
+                                FROM makanan WHERE id_makanan = ? AND status = 'ACC'""";
+                        PreparedStatement stmtInsert = conn.prepareStatement(insertQuery);
+                        stmtInsert.setInt(1, id_makanan);
+                        stmtInsert.executeUpdate();
+
+                        conn.commit();
+
+                        JOptionPane.showMessageDialog(null, "Makanan berhasil di-ACC!");
+
+                        // Memanggil metode refreshData() di RiwayatDonatur
+                        // Pastikan 'userId' adalah ID user yang relevan
+                        new RiwayatDonatur(userId).refreshData(contentPanel); // Perbarui riwayat dengan data terbaru
+
+                        dispose();
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat ACC makanan.", "Error",
+                            JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+
         setVisible(true);
     }
 }

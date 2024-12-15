@@ -1,6 +1,10 @@
 package src;
+
+import java.time.LocalDateTime;
+
 public class Makanan {
     private int id;
+    private String tanggalAcc;
     private String nama;
     private String porsi;
     private String imagePath;
@@ -29,5 +33,16 @@ public class Makanan {
 
     public String getImagePath() {
         return imagePath;
+    }
+     public void accMakanan() {
+        this.tanggalAcc = LocalDateTime.now().toString();  // Menyimpan waktu ACC
+    }
+
+    public String getTanggalAcc() {
+        return tanggalAcc;
+    }
+
+    public void setTanggalAcc(String tanggalAcc) {
+        this.tanggalAcc = tanggalAcc;
     }
 }
