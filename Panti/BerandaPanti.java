@@ -145,7 +145,7 @@ public class BerandaPanti {
             req.setBorderPainted(false); // Tidak ada border pada tombol
             req.setEnabled(!sudahDipesan);
             card.add(req);
-            
+
             // ActionListener untuk tombol req
             req.addActionListener(new ActionListener() {
                 @Override
@@ -253,8 +253,4 @@ public class BerandaPanti {
         return false; // Jika tidak ada permintaan
     }
 
-    public static void main(String[] args) {
-        // Contoh penggunaannya, ganti userId dengan ID pengguna yang sesuai
-        new BerandaPanti(1);
-    }
 }

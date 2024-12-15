@@ -104,58 +104,65 @@ public class Donasi {
         // Panel Konten Donasi
         JPanel donasiPanel = new JPanel();
         donasiPanel.setBounds(0, 80, 1440, 800);
-        donasiPanel.setLayout(null);
+        donasiPanel.setLayout(new BorderLayout()); // Menggunakan BorderLayout untuk pembagian kiri dan kanan
 
+        // Panel Kiri (Form Input)
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(null); // Layout manager untuk form input
+        formPanel.setPreferredSize(new Dimension(720, 800)); // Set ukuran panel kiri
+        formPanel.setLocation(0, 100); // Menurunkan formPanel 100px dari atas
+
+        // Label dan Input Form di Panel Kiri
         JLabel donasiLabel = new JLabel("<html><b>Form Donasi</b></html>");
         donasiLabel.setBounds(20, 20, 400, 40);
-        donasiLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        donasiLabel.setFont(new Font("Arial", Font.BOLD, 34));
         donasiPanel.add(donasiLabel);
 
         // Input Nama Makanan
         JLabel namaMakananLabel = new JLabel("Nama Makanan:");
         namaMakananLabel.setBounds(20, 80, 200, 30);
         namaMakananLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        donasiPanel.add(namaMakananLabel);
+        formPanel.add(namaMakananLabel);
 
         JTextField namaMakananField = new JTextField();
         namaMakananField.setBounds(220, 80, 400, 30);
-        donasiPanel.add(namaMakananField);
+        formPanel.add(namaMakananField);
 
         // Input Porsi
         JLabel jumlahLabel = new JLabel("Porsi:");
         jumlahLabel.setBounds(20, 130, 200, 30);
         jumlahLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        donasiPanel.add(jumlahLabel);
+        formPanel.add(jumlahLabel);
 
         JTextField porsiField = new JTextField();
         porsiField.setBounds(220, 130, 400, 30);
-        donasiPanel.add(porsiField);
+        formPanel.add(porsiField);
 
         // Input Waktu Ketersediaan
         JLabel ketersediaanLabel = new JLabel("Waktu Ketersediaan:");
         ketersediaanLabel.setBounds(20, 180, 200, 30);
         ketersediaanLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        donasiPanel.add(ketersediaanLabel);
+        formPanel.add(ketersediaanLabel);
 
         JSpinner dateTimeSpinner = new JSpinner(new SpinnerDateModel());
         dateTimeSpinner.setBounds(220, 180, 400, 30);
         JSpinner.DateEditor dateEditor = new JSpinner.DateEditor(dateTimeSpinner, "yyyy-MM-dd HH:mm:ss");
         dateTimeSpinner.setEditor(dateEditor);
-        donasiPanel.add(dateTimeSpinner);
+        formPanel.add(dateTimeSpinner);
 
         // Input Gambar
         JLabel gambarLabel = new JLabel("Gambar Makanan:");
         gambarLabel.setBounds(20, 230, 200, 30);
         gambarLabel.setFont(new Font("Arial", Font.PLAIN, 18));
-        donasiPanel.add(gambarLabel);
+        formPanel.add(gambarLabel);
 
         JButton pilihGambarButton = new JButton("Pilih Gambar");
         pilihGambarButton.setBounds(220, 230, 200, 30);
-        donasiPanel.add(pilihGambarButton);
+        formPanel.add(pilihGambarButton);
 
         JLabel filePathLabel = new JLabel("Belum ada file yang dipilih");
         filePathLabel.setBounds(430, 230, 400, 30);
-        donasiPanel.add(filePathLabel);
+        formPanel.add(filePathLabel);
 
         final File[] selectedFile = { null };
         pilihGambarButton.addActionListener(e -> {
@@ -172,7 +179,7 @@ public class Donasi {
         // Tombol Donasi
         JButton donasiButtonFinal = new JButton("Donasikan");
         donasiButtonFinal.setBounds(20, 280, 200, 40);
-        donasiPanel.add(donasiButtonFinal);
+        formPanel.add(donasiButtonFinal);
 
         donasiButtonFinal.addActionListener(e -> {
             String namaMakanan = namaMakananField.getText();
@@ -211,6 +218,19 @@ public class Donasi {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
+
+        // Panel Kanan (Animasi/Icon)
+        JPanel iconPanel = new JPanel();
+        iconPanel.setLayout(new BorderLayout()); // Layout untuk panel kanan
+        iconPanel.setPreferredSize(new Dimension(720, 800)); // Set ukuran panel kanan
+
+        // Anda dapat menambahkan animasi atau ikon di sini
+        JLabel iconLabel = new JLabel(new ImageIcon("assets\\donasi.png")); // Gantilah dengan path gambar animasi
+        iconPanel.add(iconLabel, BorderLayout.CENTER);
+
+        // Menambahkan kedua panel ke panel utama
+        donasiPanel.add(formPanel, BorderLayout.WEST); // Panel kiri untuk form input
+        donasiPanel.add(iconPanel, BorderLayout.CENTER); // Panel kanan untuk ikon/animasi
 
         frame.add(donasiPanel);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);

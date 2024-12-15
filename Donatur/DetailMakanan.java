@@ -177,9 +177,8 @@ public class DetailMakanan extends JDialog {
 
                         // Memanggil metode refreshData() di RiwayatDonatur
                         // Pastikan 'userId' adalah ID user yang relevan
-                        new RiwayatDonatur(userId).refreshData(contentPanel); // Perbarui riwayat dengan data terbaru
-
-                        dispose();
+                        lblStatusValue.setText("ACC"); // Menampilkan status 'ACC' setelah tombol ditekan
+                        btnACC.setEnabled(false);
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();

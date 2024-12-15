@@ -12,7 +12,10 @@ import src.DatabaseConnection;
 public class FoodConnection {
     public List<String[]> getFoods(int idDonatur) {
         List<String[]> foodList = new ArrayList<>();
-        String query = "SELECT id_makanan, nama, porsi, photo_path FROM makanan WHERE id_donatur = ?";
+        String query =  "SELECT m.id_makanan, m.nama, m.porsi, m.photo_path, pm.id_permintaan, pm.tanggal_permintaan "
+        + "FROM makanan m "
+        + "LEFT JOIN permintaan pm ON m.id_makanan = pm.id_makanan "
+        + "WHERE m.id_donatur = ? AND m.status = 'Belum ACC'";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

@@ -34,7 +34,7 @@ public class RiwayatDonatur {
                 // Header Panel
                 JPanel headerPanel = new JPanel();
                 headerPanel.setPreferredSize(new Dimension(1440, 80));
-                headerPanel.setBackground(new Color(50, 150, 64));
+                headerPanel.setBackground(new Color(82, 170, 94));
                 headerPanel.setLayout(null);
 
                 // Menambahkan Label Aplikasi

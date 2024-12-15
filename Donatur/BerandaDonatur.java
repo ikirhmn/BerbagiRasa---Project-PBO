@@ -159,6 +159,8 @@ public class BerandaDonatur {
         FoodConnection foodConnection = new FoodConnection();
         List<String[]> foodDataList = foodConnection.getFoods(userId); // Gantilah 1 dengan userId yang sesuai
 
+        foodCardPanel.removeAll();
+        
         // Membuat kartu makanan berdasarkan data yang diambil dari database
         for (String[] foodData : foodDataList) {
             if (foodData.length < 4)
@@ -322,10 +324,5 @@ public class BerandaDonatur {
         }
 
         return isRequested;
-    }
-
-    public static void main(String[] args) {
-        // Contoh penggunaannya, ganti userId dengan ID pengguna yang sesuai
-        new BerandaDonatur(1);
     }
 }
