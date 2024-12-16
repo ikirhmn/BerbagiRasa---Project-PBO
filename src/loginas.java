@@ -1,17 +1,20 @@
 package src;
 
 import javax.swing.*;
-
 import Donatur.LoginDonatur;
 import Panti.LoginPanti;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class loginas {
+public class loginas implements ActionListener {
+    // Frame utama
+    private JFrame frame;
+
     public loginas() {
         // Membuat frame
-        JFrame frame = new JFrame("BerbagiRasa");
+        frame = new JFrame("BerbagiRasa");
 
         // Mengatur ukuran frame
         frame.setSize(1440, 900);
@@ -115,20 +118,11 @@ public class loginas {
         });
         panelKedua.add(pantiButton);
 
-        // ActionListener untuk membuka halaman Login
-        ActionListener goToLogin = e -> {
-            LoginDonatur loginFrame = new LoginDonatur(); // Membuat instance dari halaman login
-            loginFrame.setVisible(true); // Menampilkan halaman login
-        };
+        // Menambahkan ActionListener ke tombol Donatur
+        donaturButton.addActionListener(this);
 
-        donaturButton.addActionListener(goToLogin);
-
-        ActionListener pantiLogin = e -> {
-            LoginPanti loginFrame = new LoginPanti(); // Membuat instance dari halaman login
-            loginFrame.setVisible(true); // Menampilkan halaman login
-        };
-
-        pantiButton.addActionListener(pantiLogin);
+        // Menambahkan ActionListener ke tombol Panti Asuhan
+        pantiButton.addActionListener(this);
 
         // Menambahkan kedua panel ke dalam frame
         frame.add(panelPertama);
@@ -139,4 +133,18 @@ public class loginas {
         frame.setVisible(true);
     }
 
+    // Implementasi metode actionPerformed untuk ActionListener
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof JButton) {
+            JButton sourceButton = (JButton) e.getSource();
+            if (sourceButton.getText().equals("Login as Donatur")) {
+                LoginDonatur loginFrame = new LoginDonatur(); // Membuat instance dari halaman login
+                loginFrame.setVisible(true); // Menampilkan halaman login
+            } else if (sourceButton.getText().equals("Login as Panti Asuhan")) {
+                LoginPanti loginFrame = new LoginPanti(); // Membuat instance dari halaman login
+                loginFrame.setVisible(true); // Menampilkan halaman login
+            }
+        }
+    }
 }
