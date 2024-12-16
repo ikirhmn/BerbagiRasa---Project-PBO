@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +16,8 @@ public class FoodConnection {
         String query =  "SELECT m.id_makanan, m.nama, m.porsi, m.photo_path, pm.id_permintaan, pm.tanggal_permintaan "
         + "FROM makanan m "
         + "LEFT JOIN permintaan pm ON m.id_makanan = pm.id_makanan "
-        + "WHERE m.id_donatur = ? AND m.status = 'Belum ACC'";
+        + "WHERE m.id_donatur = ? AND m.status = 'Belum ACC'"
+        + "AND m.waktu_ketersediaan > CURRENT_TIMESTAMP";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query)) {

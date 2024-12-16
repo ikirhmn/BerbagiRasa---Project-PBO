@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 
 import src.DatabaseConnection;
 import src.FoodRequestConnection;
@@ -16,6 +17,9 @@ import src.FoodRequestConnection;
 public class DetailMakanan extends JDialog {
     private int id_makanan;
     private int userId;
+    private Thread expirationThread;
+    private JLabel lblStatusValue;
+    private JButton btnACC;
 
     public DetailMakanan(JFrame parent, int id_makanan) {
         this.id_makanan = id_makanan;
@@ -130,16 +134,26 @@ public class DetailMakanan extends JDialog {
                     imageLabel.setText("Tidak ada gambar");
                 }
 
-                // Matikan tombol jika status sudah ACC
-                if ("ACC".equalsIgnoreCase(rs.getString("status"))) {
-                    btnACC.setEnabled(false);
+                // Cek status dan waktu_ketersediaan
+                String status = rs.getString("status");
+                if ("ACC".equalsIgnoreCase(status)) {
+                    btnACC.setEnabled(false); // Matikan tombol jika sudah ACC
+                } else {
+                    // Cek apakah waktu_ketersediaan sudah lewat
+                    String waktuKetersediaan = rs.getString("waktu_ketersediaan");
+                    if (waktuKetersediaan != null && !waktuKetersediaan.isEmpty()) {
+                        long currentTime = System.currentTimeMillis();
+                        long waktuKetersediaanMillis = Timestamp.valueOf(waktuKetersediaan).getTime();
+
+                        if (currentTime > waktuKetersediaanMillis) {
+                            // Jika waktu sudah lewat, update status makanan dan tampilkan di UI
+                            btnACC.setEnabled(false);
+                            lblStatusValue.setText("Kadaluarsa");
+                        }
+                    }
                 }
-            } else {
-                JOptionPane.showMessageDialog(this, "Data makanan tidak ditemukan.", "Error",
-                        JOptionPane.ERROR_MESSAGE);
-                dispose();
-                return;
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this,
@@ -148,6 +162,23 @@ public class DetailMakanan extends JDialog {
             dispose();
             return;
         }
+
+        // Implementasikan thread untuk memperbarui status waktu_ketersediaan
+        expirationThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (!Thread.interrupted()) {
+                    try {
+                        Thread.sleep(10000); // Memeriksa setiap 10 detik
+                        checkExpiration();
+                    } catch (InterruptedException e) {
+                        // Thread terhenti
+                        break;
+                    }
+                }
+            }
+        });
+        expirationThread.start();
 
         btnACC.addActionListener(new ActionListener() {
             @Override
@@ -189,5 +220,51 @@ public class DetailMakanan extends JDialog {
         });
 
         setVisible(true);
+    }
+
+     private void checkExpiration() {
+        try (Connection conn = DatabaseConnection.getConnection()) {
+            String query = "SELECT waktu_ketersediaan, status FROM makanan WHERE id_makanan = ?";
+            PreparedStatement stmt = conn.prepareStatement(query);
+            stmt.setInt(1, id_makanan);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                String waktuKetersediaan = rs.getString("waktu_ketersediaan");
+                String status = rs.getString("status");
+
+                if (waktuKetersediaan != null && !waktuKetersediaan.isEmpty()) {
+                    long currentTime = System.currentTimeMillis();
+                    long waktuKetersediaanMillis = Timestamp.valueOf(waktuKetersediaan).getTime();
+
+                    // Jika waktu sudah lewat dan status belum ACC
+                    if (currentTime > waktuKetersediaanMillis && !"ACC".equalsIgnoreCase(status)) {
+                        // Update status makanan menjadi kadaluarsa
+                        String updateQuery = "UPDATE makanan SET status = 'Kadaluarsa' WHERE id_makanan = ?";
+                        PreparedStatement updateStmt = conn.prepareStatement(updateQuery);
+                        updateStmt.setInt(1, id_makanan);
+                        updateStmt.executeUpdate();
+
+                        // Update tampilan UI (misalnya, memberi label "Kadaluarsa")
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                lblStatusValue.setText("Kadaluarsa");
+                                btnACC.setEnabled(false); // Matikan tombol ACC jika kadaluarsa
+                            }
+                        });
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void dispose() {
+        if (expirationThread != null) {
+            expirationThread.interrupt();  // Hentikan thread saat jendela ditutup
+        }
+        super.dispose();
     }
 }
