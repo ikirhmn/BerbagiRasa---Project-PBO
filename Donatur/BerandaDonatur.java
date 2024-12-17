@@ -144,6 +144,15 @@ public class BerandaDonatur {
         tambahDonasiButton.setBorderPainted(false); // Tidak ada border pada tombol
         foodPanel.add(tambahDonasiButton);
 
+        tambahDonasiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Membuka Frame Profile
+                new Donasi(userId);
+                frame.dispose(); // Menutup JFrame utama jika diperlukan
+            }
+        });
+
         // Panel untuk kartu makanan (menggunakan ScrollPane)
         JScrollPane foodScrollPane = new JScrollPane();
         foodScrollPane.setBorder(BorderFactory.createEmptyBorder());
