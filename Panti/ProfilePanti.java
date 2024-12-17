@@ -1,4 +1,5 @@
 package Panti;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import src.DatabaseConnection;
+import src.loginas;
+import src.CircleUser;
 
 public class ProfilePanti {
     private int userId;
@@ -54,7 +57,6 @@ public class ProfilePanti {
         berandaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Membuka Frame Riwayat
                 new BerandaPanti(userId);
                 frame.dispose();
             }
@@ -67,29 +69,47 @@ public class ProfilePanti {
         profilePanel.setBounds(0, 80, 1440, 800);
         profilePanel.setLayout(null);
 
-        // Contoh Konten Profile
+        JButton logout = new JButton("Keluar");
+        logout.setFont(new Font("Poppins", Font.BOLD, 14));
+        logout.setBackground(new Color(19, 85, 137));
+        logout.setBounds(550, 490, 350, 30);
+        logout.setForeground(Color.WHITE);
+        profilePanel.add(logout);
+
+        logout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new loginas();
+                frame.dispose();
+            }
+        });
+
         JLabel profileLabel = new JLabel("<html><b>Profile Panti</b></html>");
-        profileLabel.setBounds(20, 20, 400, 40);
-        profileLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        profileLabel.setBounds(20, 30, 400, 40);
+        profileLabel.setFont(new Font("Arial", Font.BOLD, 34));
         profilePanel.add(profileLabel);
 
+        String profilePath = null; // Untuk menyimpan path foto dari database
+
+        // Mengambil data profil dari database
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT nama, alamat FROM Panti WHERE id_panti = ?";
+            String query = "SELECT nama_panti, alamat_panti, profile_path FROM panti WHERE id_panti = ?";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setInt(1, userId);
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        String nama = rs.getString("nama");
-                        String alamat = rs.getString("alamat");
+                        String nama = rs.getString("nama_panti");
+                        String alamat = rs.getString("alamat_panti");
+                        profilePath = rs.getString("profile_path");
 
                         JLabel nameLabel = new JLabel("Nama: " + nama);
-                        nameLabel.setBounds(20, 80, 400, 40);
-                        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        nameLabel.setBounds(600, 400, 400, 40);
+                        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
                         profilePanel.add(nameLabel);
 
                         JLabel addressLabel = new JLabel("Alamat: " + alamat);
-                        addressLabel.setBounds(20, 120, 400, 40);
+                        addressLabel.setBounds(600, 440, 400, 40);
                         addressLabel.setFont(new Font("Arial", Font.PLAIN, 18));
                         profilePanel.add(addressLabel);
                     } else {
@@ -108,11 +128,31 @@ public class ProfilePanti {
             profilePanel.add(errorLabel);
         }
 
+        // Menampilkan Gambar Profil
+        if (profilePath != null && !profilePath.isEmpty()) {
+            try {
+                ImageIcon profileIcon = new ImageIcon(profilePath);
+                Image circularProfileImage = CircleUser.createCircularImage(profileIcon.getImage(), 240);
+
+                JLabel profileImageLabel = new JLabel(new ImageIcon(circularProfileImage));
+                profileImageLabel.setBounds(600, 150, 240, 240); // Atur posisi gambar
+                profilePanel.add(profileImageLabel);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JLabel errorImageLabel = new JLabel("Gagal memuat foto profil.");
+                errorImageLabel.setBounds(600, 100, 240, 240);
+                profilePanel.add(errorImageLabel);
+            }
+        } else {
+            JLabel noImageLabel = new JLabel("Foto profil belum tersedia.");
+            noImageLabel.setBounds(600, 100, 240, 240);
+            profilePanel.add(noImageLabel);
+        }
+
 
         // Menambahkan panel ke frame
         frame.add(profilePanel);
 
-        // Menampilkan JFrame ProfilePanti
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }
