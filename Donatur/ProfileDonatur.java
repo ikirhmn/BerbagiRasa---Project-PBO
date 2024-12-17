@@ -9,7 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import src.CircleUser;
 import src.DatabaseConnection;
+import src.loginas;
 
 public class ProfileDonatur {
     private int userId;
@@ -93,14 +95,31 @@ public class ProfileDonatur {
         profilePanel.setBounds(0, 80, 1440, 800);
         profilePanel.setLayout(null);
 
+        JButton logout = new JButton("Keluar");
+        logout.setFont(new Font("Poppins", Font.BOLD, 14));
+        logout.setBackground(new Color(19, 85, 137));
+        logout.setBounds(550, 490, 350, 30);
+        logout.setForeground(Color.WHITE);
+        profilePanel.add(logout);
+
+        logout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new loginas();
+                frame.dispose();
+            }
+        });
+
         JLabel profileLabel = new JLabel("<html><b>Profile Donatur</b></html>");
-        profileLabel.setBounds(20, 20, 400, 40);
-        profileLabel.setFont(new Font("Arial", Font.BOLD, 24));
+        profileLabel.setBounds(20, 30, 400, 40);
+        profileLabel.setFont(new Font("Arial", Font.BOLD, 34));
         profilePanel.add(profileLabel);
 
-        // Mengambil data dari database dan menampilkan informasi profil donatur
+        String profilePath = null; // Untuk menyimpan path foto dari database
+
+        // Mengambil data profil dari database
         try (Connection conn = DatabaseConnection.getConnection()) {
-            String query = "SELECT nama, alamat FROM Donatur WHERE id_donatur = ?";
+            String query = "SELECT nama, alamat, profile_path FROM donatur WHERE id_donatur = ?";
             try (PreparedStatement stmt = conn.prepareStatement(query)) {
                 stmt.setInt(1, userId);
 
@@ -108,14 +127,15 @@ public class ProfileDonatur {
                     if (rs.next()) {
                         String nama = rs.getString("nama");
                         String alamat = rs.getString("alamat");
+                        profilePath = rs.getString("profile_path");
 
                         JLabel nameLabel = new JLabel("Nama: " + nama);
-                        nameLabel.setBounds(20, 80, 400, 40);
-                        nameLabel.setFont(new Font("Arial", Font.PLAIN, 18));
+                        nameLabel.setBounds(600, 400, 400, 40);
+                        nameLabel.setFont(new Font("Arial", Font.BOLD, 18));
                         profilePanel.add(nameLabel);
 
                         JLabel addressLabel = new JLabel("Alamat: " + alamat);
-                        addressLabel.setBounds(20, 120, 400, 40);
+                        addressLabel.setBounds(600, 440, 400, 40);
                         addressLabel.setFont(new Font("Arial", Font.PLAIN, 18));
                         profilePanel.add(addressLabel);
                     } else {
@@ -134,10 +154,31 @@ public class ProfileDonatur {
             profilePanel.add(errorLabel);
         }
 
+        // Menampilkan Gambar Profil
+        if (profilePath != null && !profilePath.isEmpty()) {
+            try {
+                ImageIcon profileIcon = new ImageIcon(profilePath);
+                Image circularProfileImage = CircleUser.createCircularImage(profileIcon.getImage(), 240);
+
+                JLabel profileImageLabel = new JLabel(new ImageIcon(circularProfileImage));
+                profileImageLabel.setBounds(600, 150, 240, 240); // Atur posisi gambar
+                profilePanel.add(profileImageLabel);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                JLabel errorImageLabel = new JLabel("Gagal memuat foto profil.");
+                errorImageLabel.setBounds(600, 100, 240, 240);
+                profilePanel.add(errorImageLabel);
+            }
+        } else {
+            JLabel noImageLabel = new JLabel("Foto profil belum tersedia.");
+            noImageLabel.setBounds(600, 100, 240, 240);
+            profilePanel.add(noImageLabel);
+        }
+
+
         // Menambahkan panel ke frame
         frame.add(profilePanel);
 
-        // Menampilkan JFrame ProfileDonatur
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setVisible(true);
     }
